@@ -1,8 +1,21 @@
 {
   "plugins": [
-    "office-addins"
+    "office-addins",
+    "prettier"
   ],
   "extends": [
-    "plugin:office-addins/react"
-  ]
+    "plugin:office-addins/react",
+    "prettier"
+  ],
+  "rules": {
+    "no-undef": "off",
+    "prettier/prettier": [
+      "error",
+      {},
+      {}
+    ]
+  },
+  "env": {
+    "browser": true
+  }
 }

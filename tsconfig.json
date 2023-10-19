@@ -20,14 +20,23 @@
     "pretty": true,
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "paths": {
+      "@assets/*": [
+        "assets/*"
+      ],
+    }
   },
   "exclude": [
     "node_modules"
   ],
+  "include": [
+    "modules.d.ts",
+    "src/**/*"
+  ],
   "compileOnSave": false,
   "buildOnSave": false,
-  "ts-node": { 
-    "files": true 
+  "ts-node": {
+    "files": true
   }
 }
