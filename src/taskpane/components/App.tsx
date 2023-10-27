@@ -1,6 +1,6 @@
 import React from "react"
 import Progress from "./Progress"
-import {Translate} from "./Translate.jsx"
+import {Menu} from "./Menu/Menu"
 import {ThemeProvider} from "@emotion/react"
 import {theme} from "../theme"
 
@@ -44,7 +44,7 @@ const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
   return (
     <div className="ms-welcome">
       <ThemeProvider theme={theme}>
-        <Translate />
+        <Menu />
       </ThemeProvider>
     </div>
   )
