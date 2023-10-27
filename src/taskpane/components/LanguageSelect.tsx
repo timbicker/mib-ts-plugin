@@ -2,9 +2,15 @@ import * as React from "react"
 import Box from "@mui/material/Box"
 import TextField from "@mui/material/TextField"
 import Autocomplete from "@mui/material/Autocomplete"
-import {countries} from "./languages"
+import {countries, Country} from "./languages"
 
-export default function LanguageSelect({langValue, setLangValue, setLangInputValue}: any) {
+export default function LanguageSelect({
+  langValue,
+  setLangValue,
+}: {
+  langValue: Country
+  setLangValue: (langValue: Country) => void
+}) {
   return (
     <Autocomplete
       value={langValue}
@@ -13,9 +19,6 @@ export default function LanguageSelect({langValue, setLangValue, setLangInputVal
         setLangValue(newValue)
       }}
       // langInputValue={langInputValue}
-      onInputChange={(_, newInputValue) => {
-        setLangInputValue(newInputValue)
-      }}
       id="country-select-demo"
       sx={{m: 1, width: "100%", maxWidth: 400}}
       autoHighlight

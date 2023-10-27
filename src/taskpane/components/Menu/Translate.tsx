@@ -9,8 +9,7 @@ import {
   Collapse,
   IconButton,
 } from "@mui/material"
-import {host} from "../../state/api"
-import axios from "axios"
+import {api} from "../../state/api"
 import {useAsync} from "react-use"
 import {countries} from "../languages"
 import {mibBlack, mibTürkis} from "../../theme"
@@ -22,6 +21,73 @@ import CloseIcon from "@mui/icons-material/Close"
 
 const TOO_MANY_PARAGRAPHS =
   "Your selection contains too many paragraphs. For technical reasons, a maximum of 40 paragraphs can be processed in one run."
+
+type Options = {
+  apiOptions: {apiKeyInput: string; targetLang: string; translationOptions: any}
+  handleSourceLang: any
+  handleAddToTranslatedParas: any
+  incrementIsTranslated: any
+}
+
+async function translateParagraph(para: string, index: number, options: Options) {
+  //console.log(para)
+  //extract <w:t> tags
+  const textTagReg = /<w:t .*?>.*?<\/w:t>|<w:t>.*?<\/w:t>/gm
+  const {handleSourceLang, handleAddToTranslatedParas, incrementIsTranslated} = options
+
+  if (para.match(textTagReg)) {
+    const matches = para.match(textTagReg)
+    const text = matches.join("")
+
+    const {detectedSourceLang, translatedMatchesMonostring} = await api.translate({
+      ...options.apiOptions,
+      text,
+    })
+
+    try {
+      if (detectedSourceLang) {
+        handleSourceLang(detectedSourceLang)
+      }
+      const splitTagReg = /(?=<w:t.*?>.*?<\/w:t>)/gm
+      const translatedMatches = translatedMatchesMonostring.split(splitTagReg)
+      // replace matches with translatedMatches
+      let newPara = para
+      matches.forEach((match, i) => {
+        const outputPara =
+          match === '<w:t xml:space="preserve"> </w:t>'
+            ? newPara.replace(match, match)
+            : newPara.replace(match, translatedMatches[i])
+        newPara = outputPara
+      })
+      handleAddToTranslatedParas({index: index, text: newPara})
+      incrementIsTranslated()
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+
+        // handleAlert(`Error: ${error.response.data.message}`, severities.error)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        // handleAlert(`Error: ${error.request.data.message}`, severities.error)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message)
+        // handleAlert(`Error: ${error.message}`, severities.error)
+      }
+    }
+    //}, 1000 * (index + 1));
+  } else {
+    handleAddToTranslatedParas({index: index, text: para})
+    incrementIsTranslated()
+  }
+}
 
 export function Translate({
   variant,
@@ -52,8 +118,6 @@ export function Translate({
   const [openSnackbar, setOpenSnackbar] = useState(false)
   const [severitySnackbar, setSeveritySnackbar] = useState<AlertColor>()
   const [messageSnackbar, setMessageSnackbar] = useState("")
-
-  const [langInputValue, setLangInputValue] = useState("")
 
   const [sourceLang, setSourceLang] = useState("")
   const handleSourceLang = lang => {
@@ -126,22 +190,11 @@ export function Translate({
     setTranslatedParagraphs([])
   }
 
-  const [open, setOpen] = React.useState(false)
-
   const handleVariant = event => {
     setVariant(event.target.value)
   }
-  const handleOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
   const handleChange = event => {
     setChecked(event.target.checked)
-    if (event.target.checked) {
-      handleOpen()
-    }
   }
 
   const targetLang = langValue?.deeplCode
@@ -157,7 +210,7 @@ export function Translate({
   const noTextSelected = "No text selected."
   const noLangSelected = "No language chosen."
 
-  async function insertEmersonQuoteAtSelection() {
+  async function insertEmersonQuoteAtSelection(langValue: string) {
     await Word.run(async context => {
       try {
         // Queue a command to get the current selection and then
@@ -183,13 +236,11 @@ export function Translate({
           .join("")
 
         if (textWithoutSpaces.trim() === "") {
-          const error = new Error(noTextSelected)
-          throw error
+          throw new Error(noTextSelected)
         }
 
         if (!langValue) {
-          const error = new Error(noLangSelected)
-          throw error
+          throw new Error(noLangSelected)
         }
 
         // Queue a command to get the OOXML of the current selection.
@@ -301,73 +352,13 @@ export function Translate({
         // get paragraphs translated
 
         paragraphsForTranslation.forEach((para, index) => {
-          //console.log(para)
-          //extract <w:t> tags
-          const textTagReg = /<w:t .*?>.*?<\/w:t>|<w:t>.*?<\/w:t>/gm
-
-          if (para.match(textTagReg)) {
-            const matches = para.match(textTagReg)
-            const text = matches.join("")
-            const url = `${host}/api/v1/deepl?api_key=${apiKeyInput}&text=${encodeURIComponent(
-              text,
-            )}&target_lang=${targetLang}&split_sentences=${
-              translationOptions.splitSentences
-            }&preserve_formatting=${translationOptions.preserveFormatting}&formality=${
-              translationOptions.formality
-            }&tag_handling=${translationOptions.tagHandling}&non_splitting_tags${
-              translationOptions.non_splitting_tags
-            }`
-
-            // call api and get translation
-            //   setTimeout(function(){
-            axios
-              .get(url)
-              .then(response => {
-                const detectedSourceLang = response.data.translation.detectedSourceLang
-                if (detectedSourceLang) {
-                  handleSourceLang(detectedSourceLang)
-                }
-                const translatedMatchesMonostring = response.data.translation.text
-                const splitTagReg = /(?=<w:t.*?>.*?<\/w:t>)/gm
-                const translatedMatches = translatedMatchesMonostring.split(splitTagReg)
-                // replace matches with translatedMatches
-                let newPara = para
-                matches.forEach((match, i) => {
-                  const outputPara =
-                    match === '<w:t xml:space="preserve"> </w:t>'
-                      ? newPara.replace(match, match)
-                      : newPara.replace(match, translatedMatches[i])
-                  newPara = outputPara
-                })
-                handleAddToTranslatedParas({index: index, text: newPara})
-                incrementIsTranslated()
-              })
-              .catch(function (error) {
-                if (error.response) {
-                  // The request was made and the server responded with a status code
-                  // that falls out of the range of 2xx
-                  console.log(error.response.data)
-                  console.log(error.response.status)
-                  console.log(error.response.headers)
-
-                  handleAlert(`Error: ${error.response.data.message}`, severities.error)
-                } else if (error.request) {
-                  // The request was made but no response was received
-                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                  // http.ClientRequest in node.js
-                  console.log(error.request)
-                  handleAlert(`Error: ${error.request.data.message}`, severities.error)
-                } else {
-                  // Something happened in setting up the request that triggered an Error
-                  console.log("Error", error.message)
-                  handleAlert(`Error: ${error.message}`, severities.error)
-                }
-              })
-            //}, 1000 * (index + 1));
-          } else {
-            handleAddToTranslatedParas({index: index, text: para})
-            incrementIsTranslated()
+          const options = {
+            apiOptions: {apiKeyInput: apiKeyInput, targetLang: targetLang, translationOptions},
+            handleSourceLang,
+            handleAddToTranslatedParas,
+            incrementIsTranslated,
           }
+          translateParagraph(para, index, options)
         })
       } catch (error) {
         console.log(error)
@@ -506,8 +497,6 @@ export function Translate({
           <LanguageSelect
             langValue={langValue}
             setLangValue={setLangValue}
-            langInputValue={langInputValue}
-            setLangInputValue={setLangInputValue}
           />
         </Box>
       </Box>
@@ -527,9 +516,6 @@ export function Translate({
             variant={variant}
             handleVariant={handleVariant}
             handleChange={handleChange}
-            handleOpen={handleOpen}
-            handleClose={handleClose}
-            open={open}
           />
         </Box>
       </Box>
@@ -583,7 +569,7 @@ export function Translate({
             onClick={() => {
               handleBuildingProgress(true)
               reset()
-              insertEmersonQuoteAtSelection()
+              insertEmersonQuoteAtSelection(langValue)
             }}
           >
             Make It Bilingual!

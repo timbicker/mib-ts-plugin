@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {User} from "./types"
 import {api} from "./api"
 
@@ -50,6 +50,10 @@ export function useAuth() {
       setIsUpdatingSession(false)
     }
   }
+
+  useEffect(() => {
+    updateSession()
+  }, [apiKeyInput])
 
   const handleApiKeyInput = event => {
     setApiKeyInput(event.target.value)

@@ -7,7 +7,17 @@ import RadioGroup from "@mui/material/RadioGroup"
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
 import {countries} from "./languages"
 
-export const AddSprachklausel = ({checked, variant, handleVariant, handleChange}: any) => {
+export const AddSprachklausel = ({
+  checked,
+  variant,
+  handleVariant,
+  handleChange,
+}: {
+  checked: boolean
+  variant: string
+  handleVariant: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+}) => {
   const checkboxStyles = {display: "flex", flexDirection: "row", alignItems: "center"}
 
   return (

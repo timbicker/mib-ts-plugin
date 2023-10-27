@@ -8,10 +8,10 @@ import {Usage} from "../Usage"
 import {PlansAccordion} from "../Plans"
 import {Welcome} from "../Welcome"
 import {Authorization} from "./Authorization"
-import {Translate} from "./Translate"
 import {AboutAccordion} from "./About"
 import {MIBLogo} from "../MIBLogo"
 import {useAuth} from "../../state/useAuth"
+import {Translate2} from "./Translate2"
 
 function useLocalStoragePersistance({
   apiKeyInput,
@@ -91,10 +91,6 @@ export const Menu = ({auth}: {auth: ReturnType<typeof useAuth>}) => {
     setVariant,
   })
 
-  useEffect(() => {
-    updateSession()
-  }, [apiKeyInput])
-
   const accordSumStyles = {backgroundColor: mibGrey}
 
   const apiKeyComponent = (
@@ -160,16 +156,13 @@ export const Menu = ({auth}: {auth: ReturnType<typeof useAuth>}) => {
       </Box>
 
       <Box sx={{display: authorized ? "flex" : "none", flexDirection: "column"}}>
-        <Translate
+        <Translate2
           variant={variant}
           setVariant={setVariant}
           checked={checked}
           setChecked={setChecked}
           langValue={langValue}
           setLangValue={setLangValue}
-          user={user}
-          checkUser={updateSession()}
-          apiKeyInput={apiKeyInput}
         />
         <Usage
           scrollToBottom={scrollToBottom}
