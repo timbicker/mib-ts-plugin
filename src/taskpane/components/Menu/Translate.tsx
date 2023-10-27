@@ -9,7 +9,7 @@ import {
   Collapse,
   IconButton,
 } from "@mui/material"
-import {host} from "../App"
+import {host} from "../../state/api"
 import axios from "axios"
 import {useAsync} from "react-use"
 import {countries} from "../languages"

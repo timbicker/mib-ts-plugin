@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react"
+import React, {useRef} from "react"
 import Box from "@mui/material/Box"
 import LinearProgress from "@mui/material/LinearProgress"
 import {
@@ -15,22 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import {mibBlack} from "../theme"
 import RefreshIcon from "@mui/icons-material/Refresh"
 
-export const Usage = ({
-  scrollToBottom,
-  user,
-  triggerRefresh,
-  refreshProgress,
-  handleRefreshProgress,
-  refreshSuccess,
-  handleRefreshSuccess,
-  accordSumStyles,
-}: any) => {
-  useEffect(() => {
-    if (refreshSuccess) {
-      handleRefreshProgress(false)
-    }
-  }, [refreshSuccess])
-
+export const Usage = ({scrollToBottom, user, isUpdatingSession, updateSession, accordSumStyles}: any) => {
   const progress = 100 - (user.remainingCharacters / user.monthlyCharacters) * 100
 
   const usageRef = useRef(null)
@@ -56,16 +41,10 @@ export const Usage = ({
         <Box sx={{m: 1, width: "80%"}}>
           <Box sx={{flexGrow: 1, ml: 2, mb: 1}}>
             <Box sx={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <IconButton
-                onClick={() => {
-                  handleRefreshSuccess(false)
-                  handleRefreshProgress(true)
-                  triggerRefresh()
-                }}
-              >
+              <IconButton onClick={updateSession}>
                 <RefreshIcon />
               </IconButton>{" "}
-              {refreshProgress ? <CircularProgress sx={{m: 1}} /> : ""}
+              {isUpdatingSession ? <CircularProgress sx={{m: 1}} /> : ""}
             </Box>
 
             <LinearProgress

@@ -76,6 +76,9 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "4.13.1"
   },
+  "resolutions": {
+    "@types/react": "^17.0.39"
+  },
   "browserslist": [
     "ie 11"
   ]

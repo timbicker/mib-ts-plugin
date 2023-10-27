@@ -1,12 +1,11 @@
 import React from "react"
 import Progress from "./Progress"
-import {Menu} from "./Menu/Menu"
 import {ThemeProvider} from "@emotion/react"
 import {theme} from "../theme"
+import {AuthContainer} from "./AuthContainer"
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* global Word, require */
-
-export const host = "https://api-proxy.osc-fr1.scalingo.io" //http://localhost:5000/
 
 export interface AppProps {
   title: string
@@ -14,23 +13,6 @@ export interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const click = async () => {
-    return Word.run(async context => {
-      /**
-       * Insert your Word code here
-       */
-
-      // insert a paragraph at the end of the document.
-      const paragraph = context.document.body.insertParagraph("Hello World", Word.InsertLocation.end)
-
-      // change the paragraph color to blue.
-      paragraph.font.color = "blue"
-
-      await context.sync()
-    })
-  }
-
   if (!isOfficeInitialized) {
     return (
       <Progress
@@ -42,9 +24,9 @@ const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
   }
 
   return (
-    <div className="ms-welcome">
+    <div>
       <ThemeProvider theme={theme}>
-        <Menu />
+        <AuthContainer />
       </ThemeProvider>
     </div>
   )
