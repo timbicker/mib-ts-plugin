@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"
 import {AddSprachklausel} from "../AddSprachKlausel"
 import React from "react"
-import {processWordDocument} from "../../state/translate"
+import {processWordDocument} from "../../state/translate/translate"
+import {extendTable} from "../../state/translate/extendTable"
 
 export function Translate2({
   variant,
@@ -113,7 +114,14 @@ export function Translate2({
             variant="contained"
             onClick={processWordDocument}
           >
-            Make It Bilingual!
+            Create Translation Table
+          </Button>
+          <Button
+            size="large"
+            variant="contained"
+            onClick={extendTable}
+          >
+            Extend Table
           </Button>
         </Box>
       </Box>
