@@ -26,3 +26,24 @@ export async function processWordDocument() {
     }
   })
 }
+
+export async function updateRightCellFromWordDocument() {
+  await Word.run(async context => {
+    try {
+      // Get the selected range
+      const selection = context.document.getSelection()
+      // Load parentTable property to determine if the selection is inside a table
+      selection.load("parentTableOrNullObject")
+      await context.sync()
+      const tableOrNullObject = selection.parentTableOrNullObject
+      // todo make all necessary checks
+      await updateRightCell(
+        context,
+        context.document.getSelection(),
+        context.document.getSelection().parentTable,
+      )
+    } catch (e) {
+      console.log(`error: ${e}`)
+    }
+  })
+}
