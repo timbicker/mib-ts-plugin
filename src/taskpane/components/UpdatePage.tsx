@@ -5,6 +5,7 @@ import {Button} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
 import {ExplanationStep} from "./ExplanationStep"
 import {updateRightCellFromWordDocument} from "../state/translate/translate"
+import Typography from "@mui/material/Typography"
 
 export function UpdatePage() {
   return (
@@ -17,6 +18,7 @@ export function UpdatePage() {
       pl={3}
       pr={3}
     >
+      <Typography variant={"h6"}>Update</Typography>
       <ExplanationStep
         nr={1}
         text={

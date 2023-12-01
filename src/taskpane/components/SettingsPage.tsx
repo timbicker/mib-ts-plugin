@@ -3,6 +3,7 @@ import Button from "@mui/material/Button"
 import Stack from "@mui/material/Stack"
 import {Box} from "@mui/system"
 import Typography from "@mui/material/Typography"
+import {useAppState} from "../state/state"
 
 export const ContactUs = () => {
   // todo add user
@@ -42,7 +43,7 @@ function AboutDetails() {
         gutterBottom
       >
         The app operates according to the highest data protection and confidentiality standards: Your data is
-        processed exclusively on DSGVO-compliant servers and deleted immediately after translation. For
+        processed exclusively on GDPR-compliant servers and deleted immediately after translation. For
         translation, we use the DeepL engine, which is committed to complying with the above standards.
       </Typography>
       <Typography variant="body1">
@@ -75,8 +76,8 @@ function AboutDetails() {
 }
 
 export function SettingsPage() {
-  const [settings, setSettings] = useState<"about" | "plans">()
-  if (settings === "about") return <AboutDetails />
+  const {page, setPage} = useAppState()
+  if (page === "settings/about") return <AboutDetails />
   return (
     <Stack
       flexDirection={"column"}
@@ -96,7 +97,7 @@ export function SettingsPage() {
         </Button>
         <Button
           variant={"outlined"}
-          onClick={() => setSettings("about")}
+          onClick={() => setPage("settings/about")}
           fullWidth
         >
           About

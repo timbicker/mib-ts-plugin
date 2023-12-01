@@ -25,7 +25,7 @@ export function MIBLogo() {
         alt="Logo."
         src={logo}
       />
-      <Typography variant="h1">Make It Bilingual!</Typography>
+      <Typography sx={{fontSize: 20, fontWeight: 400}}>Make It Bilingual!</Typography>
     </Box>
   )
 }

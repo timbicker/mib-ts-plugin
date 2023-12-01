@@ -10,6 +10,7 @@ import {LanguageSelect} from "./LanguageSelect"
 import {ExplanationStep} from "./ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {processWordDocument} from "../state/translate/translate"
+import {useAppState} from "../state/state"
 
 function SelectionCard({title, content, onClick}: {title: string; content: string; onClick: () => void}) {
   function renderContent() {
@@ -39,11 +40,8 @@ function SelectionCard({title, content, onClick}: {title: string; content: strin
   )
 }
 
-function ChooseTranslationVariantCards({
-  setTranslationVariant,
-}: {
-  setTranslationVariant: (variant: "standard" | "table") => void
-}) {
+function ChooseTranslationVariantCards() {
+  const {setPage} = useAppState()
   return (
     <Stack
       direction={"column"}
@@ -59,14 +57,14 @@ function ChooseTranslationVariantCards({
         content={
           "Choose this option if your document is not within a table.\n\nMib will transform your document into a multi-row, two-column table, where the left column is your original content and the right column is the translation."
         }
-        onClick={() => setTranslationVariant("standard")}
+        onClick={() => setPage("new/standard")}
       />
       <SelectionCard
         title={"From Table"}
         content={
           "Choose this option if your document is formatted as a one-column table.\n\nMib will add another column and translate your document row by row."
         }
-        onClick={() => setTranslationVariant("table")}
+        onClick={() => setPage("new/table")}
       />
     </Stack>
   )
@@ -83,6 +81,7 @@ function TableTranslation() {
       pl={3}
       pr={3}
     >
+      <Typography variant={"h6"}>From Table</Typography>
       <ExplanationStep
         nr={1}
         text={
@@ -121,6 +120,7 @@ function StandardTranslation() {
       pl={3}
       pr={3}
     >
+      <Typography variant={"h6"}>Standard</Typography>
       <ExplanationStep
         nr={1}
         text={"Select the text you want to translate."}
@@ -143,9 +143,8 @@ function StandardTranslation() {
 }
 
 export function NewPage() {
-  const [translationVariant, setTranslationVariant] = React.useState<"standard" | "table">()
-  if (!translationVariant)
-    return <ChooseTranslationVariantCards setTranslationVariant={setTranslationVariant} />
-  if (translationVariant === "standard") return <StandardTranslation />
-  return <TableTranslation />
+  const {page, setPage} = useAppState()
+  if (page === "new/standard") return <StandardTranslation />
+  if (page === "new/table") return <TableTranslation />
+  return <ChooseTranslationVariantCards />
 }

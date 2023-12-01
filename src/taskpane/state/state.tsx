@@ -3,8 +3,10 @@ import {Country} from "../components/languages"
 
 const AppStateContext = createContext<FormPageState | null>(null)
 
+type Pages = "new" | "new/standard" | "new/table" | "update" | "settings" | "settings/about" | "settings/plan"
+
 export const useAppStateProvider = () => {
-  const [page, setPage] = useState<"new" | "update" | "settings">("new")
+  const [page, setPage] = useState<Pages>("new")
   const [language, setLanguage] = useState<Country>()
 
   return {

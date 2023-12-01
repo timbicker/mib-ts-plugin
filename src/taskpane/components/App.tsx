@@ -1,10 +1,7 @@
 import React from "react"
 import Progress from "./Progress"
 import {ThemeProvider} from "@emotion/react"
-import {theme} from "../theme"
 import Logo from "@assets/logo-filled.png"
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import TranslateIcon from "@mui/icons-material/Translate"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -14,6 +11,40 @@ import {AppStateProvider, useAppState, useAppStateProvider} from "../state/state
 import {NewPage} from "./NewPage"
 import {UpdatePage} from "./UpdatePage"
 import {SettingsPage} from "./SettingsPage"
+import BottomNavigation from "@mui/material/BottomNavigation"
+import BottomNavigationAction from "@mui/material/BottomNavigationAction"
+import RestoreIcon from "@mui/icons-material/Restore"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+import LocationOnIcon from "@mui/icons-material/LocationOn"
+
+export function SimpleBottomNavigation() {
+  const [value, setValue] = React.useState(0)
+
+  return (
+    <Box sx={{width: 500}}>
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(_, newValue) => {
+          setValue(newValue)
+        }}
+      >
+        <BottomNavigationAction
+          label="Recents"
+          icon={<RestoreIcon />}
+        />
+        <BottomNavigationAction
+          label="Favorites"
+          icon={<FavoriteIcon />}
+        />
+        <BottomNavigationAction
+          label="Nearby"
+          icon={<LocationOnIcon />}
+        />
+      </BottomNavigation>
+    </Box>
+  )
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* global Word, require */
@@ -26,10 +57,15 @@ export interface AppProps {
 function TopBar() {
   const {page, setPage} = useAppState()
 
-  const pageToIndex = {
-    new: 0,
-    update: 1,
-    settings: 2,
+  function pageToIndex() {
+    const mapping = {
+      new: 0,
+      update: 1,
+      settings: 2,
+    }
+
+    const startingPath = page.split("/")[0] as any
+    return mapping[startingPath]
   }
 
   const indexToPage = {
@@ -47,27 +83,24 @@ function TopBar() {
       <Box py={2}>
         <MIBLogo />
       </Box>
-      <Tabs
-        value={pageToIndex[page]}
+      <BottomNavigation
+        showLabels
+        value={pageToIndex()}
         onChange={handleChange}
-        sx={{
-          flexGrow: "1",
-        }}
-        variant="fullWidth"
       >
-        <Tab
+        <BottomNavigationAction
+          label="New Translation"
           icon={<TranslateIcon />}
-          label="New translation"
         />
-        <Tab
+        <BottomNavigationAction
+          label="Update Translation"
           icon={<AutorenewIcon />}
-          label="Update translation"
         />
-        <Tab
-          icon={<SettingsIcon />}
+        <BottomNavigationAction
           label="Settings"
+          icon={<SettingsIcon />}
         />
-      </Tabs>
+      </BottomNavigation>
     </Box>
   )
 }
@@ -75,17 +108,10 @@ function TopBar() {
 function Pages() {
   const {page} = useAppState()
 
-  switch (page) {
-    case "new":
-      return <NewPage />
-    case "update":
-      return <UpdatePage />
-    case "settings":
-      return <SettingsPage />
-    default:
-      const __exhaustedCheck: never = page
-      throw Error(`Unknown page: ${page}`)
-  }
+  if (page.startsWith("new")) return <NewPage />
+  if (page.startsWith("update")) return <UpdatePage />
+  if (page.startsWith("settings")) return <SettingsPage />
+  return <NewPage />
 }
 
 const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
@@ -101,7 +127,7 @@ const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={{}}>
       <AppStateProvider state={state}>
         <TopBar />
         <Pages />
