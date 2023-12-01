@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react"
 import {Box} from "@mui/system"
 import {Alert, Divider} from "@mui/material"
-import {countries, Country} from "../../languages"
+import {countries, Country} from "../../../components/languages"
 import ApiInput from "../ApiInput"
 import {mibGrey, mibTürkis} from "../../../theme"
 import {Usage} from "../Usage"
@@ -10,7 +10,7 @@ import {Welcome} from "../Welcome"
 import {Authorization} from "./Authorization"
 import {AboutAccordion} from "./About"
 import {MIBLogo} from "../MIBLogo"
-import {useAuth} from "../../../state/useAuth"
+import {useAuth} from "../../state/useAuth"
 import {Translate2} from "./Translate2"
 
 function useLocalStoragePersistance({

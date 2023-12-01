@@ -4,7 +4,7 @@ import Accordion from "@mui/material/Accordion"
 import AccordionSummary from "@mui/material/AccordionSummary"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import {Plan, User} from "../../state/types"
+import {Plan, User} from "../state/types"
 import {
   Badge,
   Button,
@@ -24,7 +24,7 @@ import {Box} from "@mui/system"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import moment from "moment/moment"
 import {useAsync} from "react-use"
-import {api} from "../../state/api"
+import {api} from "../state/api"
 import {ContactUs} from "./ContactUs"
 
 function PlanComponent({

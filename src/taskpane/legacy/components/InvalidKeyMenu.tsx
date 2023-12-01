@@ -5,7 +5,7 @@ import ApiInput from "./ApiInput"
 import {Alert, Divider} from "@mui/material"
 import {Welcome} from "./Welcome"
 import {AboutDetails} from "./Menu/About"
-import {useAuth} from "../../state/useAuth"
+import {useAuth} from "../state/useAuth"
 import {MIBLogo} from "./MIBLogo"
 import {PlansDetails} from "./Plans"
 
