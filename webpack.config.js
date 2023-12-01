@@ -30,7 +30,7 @@ module.exports = async (env, options) => {
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"],
       alias: {
-        "@assets/*": "assets/*",
+        "@assets": path.resolve(__dirname, "assets"),
       },
     },
     module: {
