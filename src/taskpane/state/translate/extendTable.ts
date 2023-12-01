@@ -21,8 +21,43 @@ function getRowArray(table: Word.Table): Word.TableRow[] {
   return rows
 }
 
-function mergeLoadPaths(sourcePath: string, paths: string[]) {
-  return paths.map(path => `${sourcePath}/${path}`).join(",")
+function getParagraphsArray(cell: Word.TableCell): Word.Paragraph[] {
+  const paragraphs: Word.Paragraph[] = []
+  paragraphs.push(cell.body.paragraphs.getFirst())
+  for (let i = 1; i < cell.body.paragraphs.items.length; i++) {
+    paragraphs.push(paragraphs[i - 1].getNext())
+  }
+  return paragraphs
+}
+
+async function updateAllParagraphs(
+  context: Word.RequestContext,
+  sourceCell: Word.TableCell,
+  targetCell: Word.TableCell,
+) {
+  targetCell.load("body/paragraphs/items")
+  sourceCell.load("body/paragraphs/items")
+  await context.sync()
+  const numSourceParagraphs = sourceCell.body.paragraphs.items.length
+  for (let i = 1; i < numSourceParagraphs; i++) {
+    targetCell.body.insertParagraph("", "End")
+  }
+  targetCell.load("body/paragraphs/items")
+  await context.sync()
+  const sourceParagraphs = getParagraphsArray(sourceCell)
+  const targetParagraphs = getParagraphsArray(targetCell)
+  for (let i = 0; i < sourceParagraphs.length; i++) {
+    // todo loading on collection does not work
+    const sourceParagraph = sourceParagraphs[i]
+    const targetParagraph = targetParagraphs[i]
+    sourceParagraph.load("font,text")
+    targetParagraph.load("listOrNullObject/isNullObject")
+    await context.sync()
+    if (!targetParagraph.listOrNullObject.isNullObject) {
+      targetParagraph.detachFromList()
+    }
+    updateParagraph(targetParagraph, sourceParagraph, sourceParagraph.text.trim())
+  }
 }
 
 async function _extendTable(context: Word.RequestContext, table: Word.Table) {
@@ -34,22 +69,12 @@ async function _extendTable(context: Word.RequestContext, table: Word.Table) {
 
   // Iterate through the non-empty paragraphs and set each cell's value
   for (const row of rowArray) {
-    row.load("cells/items/body/paragraphs/items")
+    row.load("cells/items")
     await context.sync()
     const cells = getCellArray(row)
     const sourceCell = cells[0]
     const targetCell = cells[cells.length - 1]
-    const sourceParagraph = sourceCell.body.paragraphs.getFirst()
-    const paragraphRight = targetCell.body.paragraphs.getFirst()
-    sourceParagraph.load("font,style,text,listOrNullObject/id,listOrNullObject/levelTypes")
-    paragraphRight.load(
-      "font,style,text,listOrNullObject/isNullObject,listOrNullObject/id,listOrNullObject/levelTypes",
-    )
-    await context.sync()
-    if (!paragraphRight.listOrNullObject.isNullObject) {
-      paragraphRight.detachFromList()
-    }
-    updateParagraph(paragraphRight, sourceParagraph, sourceParagraph.text.trim())
+    await updateAllParagraphs(context, sourceCell, targetCell)
   }
 
   await context.sync()

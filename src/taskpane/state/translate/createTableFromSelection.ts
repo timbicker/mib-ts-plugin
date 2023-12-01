@@ -41,7 +41,6 @@ async function addTwoColumnTable(
   table.load("rows/cells/body/paragraphs/items")
   await context.sync()
 
-  const rightListManager = new ListManager(context)
   const leftListManager = new ListManager(context)
   // Iterate through the non-empty paragraphs and set each cell's value
   for (let i = 0; i < paragraphs.length; i++) {
@@ -53,7 +52,6 @@ async function addTwoColumnTable(
     updateParagraph(paragraphLeft, originalParagraph, originalParagraph.text.trim())
     updateParagraph(paragraphRight, originalParagraph, originalParagraph.text.trim())
     await leftListManager.updateLists(originalParagraph, paragraphLeft)
-    await rightListManager.updateLists(originalParagraph, paragraphRight)
   }
 
   const range = table.getRange("Whole")

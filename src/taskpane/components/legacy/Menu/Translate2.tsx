@@ -1,12 +1,12 @@
 import {Box} from "@mui/system"
-import {mibBlack, mibTürkis} from "../../theme"
+import {mibBlack, mibTürkis} from "../../../theme"
 import {Avatar, Button} from "@mui/material"
 import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"
 import {AddSprachklausel} from "../AddSprachKlausel"
 import React from "react"
-import {processWordDocument} from "../../state/translate/translate"
-import {extendTable} from "../../state/translate/extendTable"
+import {processWordDocument} from "../../../state/translate/translate"
+import {extendTable} from "../../../state/translate/extendTable"
 
 export function Translate2({
   variant,

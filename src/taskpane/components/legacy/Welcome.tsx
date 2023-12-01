@@ -1,9 +1,9 @@
 import {IconButton} from "@fluentui/react"
 import {Box, Card, Typography} from "@mui/material"
 import React, {useEffect} from "react"
-import {mibBlack, mibTürkis} from "../theme"
+import {mibBlack, mibTürkis} from "../../theme"
 import CloseIcon from "@mui/icons-material/Close"
-import WavingHand from "../../../assets/waving-hand_1f44b.png"
+import WavingHand from "@assets/waving-hand_1f44b.png"
 
 export const Welcome = () => {
   const [open, setOpen] = React.useState(true)

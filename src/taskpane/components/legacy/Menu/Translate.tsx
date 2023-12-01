@@ -9,10 +9,10 @@ import {
   Collapse,
   IconButton,
 } from "@mui/material"
-import {api} from "../../state/api"
+import {api} from "../../../state/api"
 import {useAsync} from "react-use"
-import {countries} from "../languages"
-import {mibBlack, mibTürkis} from "../../theme"
+import {countries} from "../../languages"
+import {mibBlack, mibTürkis} from "../../../theme"
 import {Box} from "@mui/system"
 import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"

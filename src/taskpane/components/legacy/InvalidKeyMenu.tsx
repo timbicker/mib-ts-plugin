@@ -1,11 +1,11 @@
 import React, {useEffect} from "react"
-import {mibTürkis} from "../theme"
+import {mibTürkis} from "../../theme"
 import {Box} from "@mui/system"
 import ApiInput from "./ApiInput"
 import {Alert, Divider} from "@mui/material"
 import {Welcome} from "./Welcome"
 import {AboutDetails} from "./Menu/About"
-import {useAuth} from "../state/useAuth"
+import {useAuth} from "../../state/useAuth"
 import {MIBLogo} from "./MIBLogo"
 import {PlansDetails} from "./Plans"
 

@@ -5,7 +5,7 @@ import FormControl from "@mui/material/FormControl"
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
-import {countries} from "./languages"
+import {countries} from "../languages"
 
 export const AddSprachklausel = ({
   checked,

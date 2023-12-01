@@ -1,8 +1,8 @@
 import React from "react"
-import Progress from "./Progress"
+import Progress from "./legacy/Progress"
 import {ThemeProvider} from "@emotion/react"
 import {theme} from "../theme"
-import {AuthContainer} from "./AuthContainer"
+import {AuthContainer} from "./legacy/AuthContainer"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* global Word, require */
@@ -24,11 +24,9 @@ const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
   }
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <AuthContainer />
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <AuthContainer />
+    </ThemeProvider>
   )
 }
 

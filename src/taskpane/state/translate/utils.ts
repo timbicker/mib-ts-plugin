@@ -4,11 +4,14 @@ export function updateParagraph(
   text: string,
 ) {
   newParagraph.insertText(text, "Replace")
-  newParagraph.font.set({
-    bold: originalParagraph.font.bold,
-    italic: originalParagraph.font.italic,
-    name: originalParagraph.font.name,
-    size: originalParagraph.font.size,
+  newParagraph.set({
+    font: {
+      // can be null
+      bold: !!originalParagraph.font.bold,
+      italic: !!originalParagraph.font.italic,
+      name: originalParagraph.font.name,
+      size: originalParagraph.font.size,
+    },
   })
 }
 
