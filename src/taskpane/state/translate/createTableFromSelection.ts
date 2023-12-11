@@ -42,6 +42,7 @@ async function addTwoColumnTable(
   await context.sync()
 
   const leftListManager = new ListManager(context)
+  const rightListManager = new ListManager(context)
   // Iterate through the non-empty paragraphs and set each cell's value
   for (let i = 0; i < paragraphs.length; i++) {
     const cellLeft = table.rows.items[i].cells.items[0]
@@ -52,6 +53,7 @@ async function addTwoColumnTable(
     updateParagraph(paragraphLeft, originalParagraph, originalParagraph.text.trim())
     updateParagraph(paragraphRight, originalParagraph, originalParagraph.text.trim())
     await leftListManager.updateLists(originalParagraph, paragraphLeft)
+    await rightListManager.updateLists(originalParagraph, paragraphRight)
   }
 
   const range = table.getRange("Whole")
@@ -76,7 +78,7 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
   selection.load("paragraphs")
   await context.sync()
   selection.paragraphs.load(
-    "font,style,text,listOrNullObject/id,listOrNullObject/levelTypes,parentTableOrNullObject",
+    "font,style,text,listOrNullObject/id,listOrNullObject/levelTypes,parentTableOrNullObject,listItemOrNullObject/level",
   )
   await context.sync()
 

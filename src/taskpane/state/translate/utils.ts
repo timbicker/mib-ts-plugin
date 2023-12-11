@@ -31,6 +31,13 @@ export class ListManager {
     this.newList = newParagraph.startNewList()
     this.newList.load("id")
     await this.context.sync()
+    if (!oldParagraph.listItemOrNullObject.isNullObject) {
+      newParagraph.set({
+        listItem: {
+          level: oldParagraph.listItemOrNullObject.level,
+        },
+      })
+    }
   }
 
   private setLevelType(newList: Word.List, levelTypes: Word.ListLevelType, level: number) {
@@ -46,6 +53,7 @@ export class ListManager {
     const levelTypes = originalList.levelTypes
     this.setLevelType(newList, levelTypes[0], 0)
     this.setLevelType(newList, levelTypes[1], 1)
+    this.setLevelType(newList, levelTypes[2], 2)
   }
 
   async updateLists(originalParagraph: Word.Paragraph, newParagraph: Word.Paragraph) {
@@ -57,7 +65,11 @@ export class ListManager {
       await this.setLists(originalParagraph, newParagraph)
       this.copyListProperties(this.originalList, this.newList)
     } else {
-      newParagraph.attachToList(this.newList.id, 0)
+      let level = 0
+      if (!originalParagraph.listItemOrNullObject.isNullObject) {
+        level = originalParagraph.listItemOrNullObject.level
+      }
+      newParagraph.attachToList(this.newList.id, level)
     }
   }
 }
