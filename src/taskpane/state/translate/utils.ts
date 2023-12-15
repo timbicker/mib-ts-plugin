@@ -1,3 +1,5 @@
+import {getLog} from "../translationLog"
+
 export function updateParagraph(
   newParagraph: Word.Paragraph,
   originalParagraph: Word.Paragraph,
@@ -15,18 +17,28 @@ export function updateParagraph(
   })
 }
 
+type ListManagerOptions = {
+  logOnListChange?: boolean
+}
+
 export class ListManager {
   originalList: Word.List | undefined = undefined
   newList: Word.List | undefined = undefined
+  private options: ListManagerOptions
 
-  constructor(private context: Word.RequestContext) {}
+  constructor(
+    private context: Word.RequestContext,
+    options?: ListManagerOptions,
+  ) {
+    this.options = options || {}
+  }
 
   private clearLists() {
     this.originalList = undefined
     this.newList = undefined
   }
 
-  private async setLists(oldParagraph: Word.Paragraph, newParagraph: Word.Paragraph) {
+  private async startNewLists(oldParagraph: Word.Paragraph, newParagraph: Word.Paragraph) {
     this.originalList = oldParagraph.listOrNullObject
     this.newList = newParagraph.startNewList()
     this.newList.load("id")
@@ -62,7 +74,10 @@ export class ListManager {
       return
     }
     if (this.originalList === undefined || this.originalList.id !== originalParagraph.listOrNullObject.id) {
-      await this.setLists(originalParagraph, newParagraph)
+      await this.startNewLists(originalParagraph, newParagraph)
+      if (this.options.logOnListChange) {
+        getLog().addMessage(`List occured`)
+      }
       this.copyListProperties(this.originalList, this.newList)
     } else {
       let level = 0

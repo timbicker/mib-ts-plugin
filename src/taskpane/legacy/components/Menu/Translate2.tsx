@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"
 import {AddSprachklausel} from "../AddSprachKlausel"
 import React from "react"
-import {processWordDocument} from "../../../state/translate/translate"
+import {createTranslation} from "../../../state/translate/translate"
 import {extendTable} from "../../../state/translate/extendTable"
 
 export function Translate2({
@@ -112,7 +112,7 @@ export function Translate2({
           <Button
             size="large"
             variant="contained"
-            onClick={processWordDocument}
+            onClick={createTranslation}
           >
             Create Translation Table
           </Button>

@@ -9,8 +9,8 @@ import TranslateIcon from "@mui/icons-material/Translate"
 import {LanguageSelect} from "./LanguageSelect"
 import {ExplanationStep} from "./ExplanationStep"
 import Typography from "@mui/material/Typography"
-import {processWordDocument} from "../state/translate/translate"
 import {useAppState} from "../state/state"
+import {TranslateLog} from "./TranslateLog"
 
 function SelectionCard({title, content, onClick}: {title: string; content: string; onClick: () => void}) {
   function renderContent() {
@@ -71,6 +71,10 @@ function ChooseTranslationVariantCards() {
 }
 
 function TableTranslation() {
+  const {isTranslating, createTranslationFromTable} = useAppState()
+  if (isTranslating !== "idle") {
+    return <TranslateLog />
+  }
   return (
     <Stack
       direction={"column"}
@@ -101,7 +105,7 @@ function TableTranslation() {
         variant={"outlined"}
         startIcon={<TranslateIcon />}
         sx={{pl: 2, pr: 2}}
-        onClick={processWordDocument}
+        onClick={createTranslationFromTable}
       >
         Translate
       </Button>
@@ -110,6 +114,10 @@ function TableTranslation() {
 }
 
 function StandardTranslation() {
+  const {isTranslating, createTranslationFromStandard} = useAppState()
+  if (isTranslating !== "idle") {
+    return <TranslateLog />
+  }
   return (
     <Stack
       direction={"column"}
@@ -134,7 +142,7 @@ function StandardTranslation() {
         variant={"outlined"}
         startIcon={<TranslateIcon />}
         sx={{pl: 2, pr: 2}}
-        onClick={processWordDocument}
+        onClick={createTranslationFromStandard}
       >
         Translate
       </Button>

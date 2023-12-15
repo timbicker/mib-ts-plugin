@@ -4,10 +4,16 @@ import {LanguageSelect} from "./LanguageSelect"
 import {Button} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
 import {ExplanationStep} from "./ExplanationStep"
-import {updateRightCellFromWordDocument} from "../state/translate/translate"
 import Typography from "@mui/material/Typography"
+import {useAppState} from "../state/state"
+import {TranslateLog} from "./TranslateLog"
 
 export function UpdatePage() {
+  const {isTranslating, createTranslationFromStandard} = useAppState()
+  if (isTranslating !== "translating") {
+    return <TranslateLog />
+  }
+
   return (
     <Stack
       direction={"column"}
@@ -34,7 +40,7 @@ export function UpdatePage() {
         variant={"outlined"}
         startIcon={<TranslateIcon />}
         sx={{pl: 2, pr: 2}}
-        onClick={updateRightCellFromWordDocument}
+        onClick={createTranslationFromStandard}
       >
         Translate
       </Button>

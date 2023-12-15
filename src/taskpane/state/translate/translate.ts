@@ -17,7 +17,7 @@ async function processStandard(context: Word.RequestContext) {
   }
 }
 
-export async function processWordDocument() {
+export async function createTranslation() {
   await Word.run(async context => {
     try {
       await processStandard(context)
@@ -27,7 +27,7 @@ export async function processWordDocument() {
   })
 }
 
-export async function updateRightCellFromWordDocument() {
+export async function updateTranslation() {
   await Word.run(async context => {
     try {
       // Get the selected range
