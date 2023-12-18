@@ -1,30 +1,56 @@
 import {ListManager, updateParagraph} from "./utils"
+import {getLog} from "../translationLog"
 
-type SortedParagraphs = {
-  paragraphs: Word.Paragraph[]
-  type: "table" | "standard"
-}
+type SortedParagraphs =
+  | {
+      type: "standard"
+      paragraphs: Word.Paragraph[]
+    }
+  | {
+      type: "table"
+      ooxml: OfficeExtension.ClientResult<string>
+    }
 
-function getSortedParagraphs(paragraphs: Word.Paragraph[]): SortedParagraphs[] {
+function exhaustedCheck(_: never) {}
+
+async function getSortedParagraphs(
+  context: Word.RequestContext,
+  paragraphs: Word.Paragraph[],
+): Promise<SortedParagraphs[]> {
   function getParagraphType(para: Word.Paragraph): "table" | "standard" {
     if (para.parentTableOrNullObject.isNullObject) {
       return "standard"
     }
     return "table"
   }
-
   const sortedParagraphs: SortedParagraphs[] = []
   for (const paragraph of paragraphs) {
     if (sortedParagraphs.length === 0) {
-      sortedParagraphs.push({paragraphs: [paragraph], type: getParagraphType(paragraph)})
-      continue
+      if (getParagraphType(paragraph) === "standard") {
+        sortedParagraphs.push({paragraphs: [paragraph], type: "standard"})
+        continue
+      }
+      const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
+      await context.sync()
+      sortedParagraphs.push({ooxml, type: "table"})
     }
     const lastSortedParagraph = sortedParagraphs[sortedParagraphs.length - 1]
     const paragraphType = getParagraphType(paragraph)
-    if (lastSortedParagraph.type === paragraphType) {
-      lastSortedParagraph.paragraphs.push(paragraph)
+    if (paragraphType === "table") {
+      if (lastSortedParagraph.type === "standard") {
+        const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
+        await context.sync()
+        sortedParagraphs.push({ooxml, type: "table"})
+        continue
+      }
+    } else if (paragraphType === "standard") {
+      if (lastSortedParagraph.type === "table") {
+        sortedParagraphs.push({paragraphs: [paragraph], type: "standard"})
+      } else if (lastSortedParagraph.type === "standard") {
+        lastSortedParagraph.paragraphs.push(paragraph)
+      }
     } else {
-      sortedParagraphs.push({paragraphs: [paragraph], type: paragraphType})
+      exhaustedCheck(paragraphType)
     }
   }
   return sortedParagraphs
@@ -61,8 +87,10 @@ async function addTwoColumnTable(
   return range
 }
 
-function addCleanupParagraph(range: Word.Range) {
-  return range.insertParagraph(" ", Word.InsertLocation.after)
+function addEmptyParagraphAtEndOfRange(range: Word.Range) {
+  const paragraph = range.insertParagraph(" ", Word.InsertLocation.after)
+  const newRange = paragraph.getRange("Whole")
+  return {paragraph, range: newRange}
 }
 
 async function detachFromListIfPossible(context: Word.RequestContext, paragraph: Word.Paragraph) {
@@ -84,6 +112,8 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
 
   const nonEmptyParagraphs = selection.paragraphs.items.filter(p => p.text.trim() !== "")
 
+  const sortedParagraphs = await getSortedParagraphs(context, nonEmptyParagraphs)
+
   selection.clear()
   await context.sync()
 
@@ -92,16 +122,25 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
     return
   }
 
-  const cleanupParagraph = addCleanupParagraph(selection)
-  let range = cleanupParagraph.getRange("Whole")
+  const {paragraph: cleanupParagraph, range: _range} = addEmptyParagraphAtEndOfRange(selection)
+  let range = _range
   await context.sync()
 
   await detachFromListIfPossible(context, cleanupParagraph)
 
-  const sortedParagraphs = getSortedParagraphs(nonEmptyParagraphs)
   for (const sortedParagraph of sortedParagraphs) {
     if (sortedParagraph.type === "standard") {
+      // @ts-ignore
       range = await addTwoColumnTable(context, range, sortedParagraph.paragraphs)
+    }
+    if (sortedParagraph.type === "table") {
+      const p1 = addEmptyParagraphAtEndOfRange(range)
+      range = p1.range
+      range = range.insertOoxml(sortedParagraph.ooxml.value, Word.InsertLocation.after)
+      const p2 = addEmptyParagraphAtEndOfRange(range)
+      range = p2.range
+      getLog().addMessage("table found")
+      await context.sync()
     }
   }
 
