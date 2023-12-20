@@ -2,16 +2,11 @@ import {updateRightCell} from "./updateRightCell"
 import {createTableFromSelection} from "./createTableFromSelection"
 import {getLog} from "../translationLog"
 
-async function processStandard(context: Word.RequestContext) {
-  // Get the selected range
-  const selection = context.document.getSelection()
-  await createTableFromSelection(context, selection)
-}
-
 export async function createTranslation() {
   await Word.run(async context => {
     try {
-      await processStandard(context)
+      const selection = context.document.getSelection()
+      await createTableFromSelection(context, selection)
     } catch (e) {
       if (e instanceof Error) {
         getLog().addMessage(`error: ${e.message}`)

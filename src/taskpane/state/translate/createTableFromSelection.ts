@@ -10,6 +10,10 @@ type SortedParagraphs =
       type: "table"
       ooxml: OfficeExtension.ClientResult<string>
     }
+  | {
+      type: "image"
+      ooxml: OfficeExtension.ClientResult<string>
+    }
 
 function exhaustedCheck(_: never) {}
 
@@ -17,36 +21,50 @@ async function getSortedParagraphs(
   context: Word.RequestContext,
   paragraphs: Word.Paragraph[],
 ): Promise<SortedParagraphs[]> {
-  function getParagraphType(para: Word.Paragraph): "table" | "standard" {
+  function getParagraphType(para: Word.Paragraph): "table" | "standard" | "image" {
     if (para.parentTableOrNullObject.isNullObject) {
       return "standard"
     }
+    if (para.inlinePictures.items.length > 0) {
+      return "image"
+    }
     return "table"
   }
-  const sortedParagraphs: SortedParagraphs[] = []
-  for (const paragraph of paragraphs) {
-    if (sortedParagraphs.length === 0) {
-      if (getParagraphType(paragraph) === "standard") {
-        sortedParagraphs.push({paragraphs: [paragraph], type: "standard"})
-        continue
-      }
+
+  async function addNewParagraph(paragraphType: "standard" | "table" | "image", paragraph: Word.Paragraph) {
+    if (paragraphType === "standard") {
+      sortedParagraphs.push({paragraphs: [paragraph], type: "standard"})
+    } else if (paragraphType === "image") {
+      const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
+      await context.sync()
+      sortedParagraphs.push({ooxml, type: "image"})
+    } else {
       const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
       await context.sync()
       sortedParagraphs.push({ooxml, type: "table"})
     }
-    const lastSortedParagraph = sortedParagraphs[sortedParagraphs.length - 1]
+  }
+
+  const sortedParagraphs: SortedParagraphs[] = []
+  for (const paragraph of paragraphs) {
     const paragraphType = getParagraphType(paragraph)
+    if (sortedParagraphs.length === 0) {
+      await addNewParagraph(paragraphType, paragraph)
+      continue
+    }
+    const lastSortedParagraph = sortedParagraphs[sortedParagraphs.length - 1]
     if (paragraphType === "table") {
-      if (lastSortedParagraph.type === "standard") {
-        const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
-        await context.sync()
-        sortedParagraphs.push({ooxml, type: "table"})
-        continue
+      if (lastSortedParagraph.type !== "table") {
+        await addNewParagraph(paragraphType, paragraph)
+      }
+    } else if (paragraphType === "image") {
+      if (lastSortedParagraph.type !== "image") {
+        await addNewParagraph(paragraphType, paragraph)
       }
     } else if (paragraphType === "standard") {
-      if (lastSortedParagraph.type === "table") {
-        sortedParagraphs.push({paragraphs: [paragraph], type: "standard"})
-      } else if (lastSortedParagraph.type === "standard") {
+      if (lastSortedParagraph.type !== "standard") {
+        await addNewParagraph(paragraphType, paragraph)
+      } else {
         lastSortedParagraph.paragraphs.push(paragraph)
       }
     } else {
@@ -103,12 +121,16 @@ async function detachFromListIfPossible(context: Word.RequestContext, paragraph:
 }
 
 export async function createTableFromSelection(context: Word.RequestContext, selection: Word.Range) {
-  selection.load("paragraphs")
+  selection.load("paragraphs,inlinePictures/items")
   await context.sync()
   selection.paragraphs.load(
-    "font,style,text,listOrNullObject/id,listOrNullObject/levelTypes,parentTableOrNullObject,listItemOrNullObject/level",
+    "font,style,text,listOrNullObject/id,listOrNullObject/levelTypes,parentTableOrNullObject,listItemOrNullObject/level,inlinePictures/items",
   )
   await context.sync()
+
+  if (selection.inlinePictures.items.length > 0) {
+    getLog().addMessage("image found")
+  }
 
   const nonEmptyParagraphs = selection.paragraphs.items.filter(p => p.text.trim() !== "")
 
@@ -130,7 +152,6 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
 
   for (const sortedParagraph of sortedParagraphs) {
     if (sortedParagraph.type === "standard") {
-      // @ts-ignore
       range = await addTwoColumnTable(context, range, sortedParagraph.paragraphs)
     }
     if (sortedParagraph.type === "table") {
@@ -140,6 +161,15 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
       const p2 = addEmptyParagraphAtEndOfRange(range)
       range = p2.range
       getLog().addMessage("table found")
+      await context.sync()
+    }
+    if (sortedParagraph.type === "image") {
+      const p1 = addEmptyParagraphAtEndOfRange(range)
+      range = p1.range
+      range = range.insertOoxml(sortedParagraph.ooxml.value, Word.InsertLocation.after)
+      const p2 = addEmptyParagraphAtEndOfRange(range)
+      range = p2.range
+      getLog().addMessage("image found")
       await context.sync()
     }
   }
