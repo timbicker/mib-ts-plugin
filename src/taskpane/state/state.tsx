@@ -48,7 +48,7 @@ export const useAppStateProvider = () => {
 
   async function createTranslationFromTable() {
     setIsTranslating("translating")
-    await translate.createTranslation()
+    await translate.extendOneColumnTable()
     setIsTranslating("success")
   }
 

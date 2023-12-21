@@ -1,6 +1,7 @@
 import {updateRightCell} from "./updateRightCell"
 import {createTableFromSelection} from "./createTableFromSelection"
 import {getLog} from "../translationLog"
+import {extendTable} from "./extendTable"
 
 export async function createTranslation() {
   await Word.run(async context => {
@@ -31,6 +32,16 @@ export async function updateTranslation() {
         context.document.getSelection(),
         context.document.getSelection().parentTable,
       )
+    } catch (e) {
+      console.log(`error: ${e}`)
+    }
+  })
+}
+
+export async function extendOneColumnTable() {
+  await Word.run(async context => {
+    try {
+      await extendTable(context)
     } catch (e) {
       console.log(`error: ${e}`)
     }

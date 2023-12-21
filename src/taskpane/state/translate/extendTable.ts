@@ -1,7 +1,7 @@
 /*
 Takes the first column and adds it as another column.
  */
-import {updateParagraph} from "./utils"
+import {ListManager, updateParagraph} from "./utils"
 
 function getCellArray(row: Word.TableRow): Word.TableCell[] {
   const cells: Word.TableCell[] = []
@@ -30,10 +30,11 @@ function getParagraphsArray(cell: Word.TableCell): Word.Paragraph[] {
   return paragraphs
 }
 
-async function updateAllParagraphs(
+async function updateAllParagraphsOfRow(
   context: Word.RequestContext,
   sourceCell: Word.TableCell,
   targetCell: Word.TableCell,
+  listManager: ListManager,
 ) {
   targetCell.load("body/paragraphs/items")
   sourceCell.load("body/paragraphs/items")
@@ -48,25 +49,37 @@ async function updateAllParagraphs(
   const targetParagraphs = getParagraphsArray(targetCell)
   for (let i = 0; i < sourceParagraphs.length; i++) {
     // todo loading on collection does not work
-    const sourceParagraph = sourceParagraphs[i]
     const targetParagraph = targetParagraphs[i]
-    sourceParagraph.load("font,text")
     targetParagraph.load("listOrNullObject/isNullObject")
     await context.sync()
     if (!targetParagraph.listOrNullObject.isNullObject) {
       targetParagraph.detachFromList()
     }
+  }
+  for (let i = 0; i < sourceParagraphs.length; i++) {
+    // todo loading on collection does not work
+    const sourceParagraph = sourceParagraphs[i]
+    const targetParagraph = targetParagraphs[i]
+    sourceParagraph.load(
+      "font,style,text,listOrNullObject/id,listOrNullObject/levelTypes,listItemOrNullObject/level",
+    )
+    await context.sync()
     updateParagraph(targetParagraph, sourceParagraph, sourceParagraph.text.trim())
+    await listManager.updateLists(sourceParagraph, targetParagraph)
   }
 }
 
 async function _extendTable(context: Word.RequestContext, table: Word.Table) {
   table.addColumns("End", 1)
   table.load("rows/items")
+  table.set({
+    width: 450,
+  })
   await context.sync()
 
   const rowArray = getRowArray(table)
 
+  const listManager = new ListManager(context, {logOnListChange: true})
   // Iterate through the non-empty paragraphs and set each cell's value
   for (const row of rowArray) {
     row.load("cells/items")
@@ -74,33 +87,23 @@ async function _extendTable(context: Word.RequestContext, table: Word.Table) {
     const cells = getCellArray(row)
     const sourceCell = cells[0]
     const targetCell = cells[cells.length - 1]
-    await updateAllParagraphs(context, sourceCell, targetCell)
+    await updateAllParagraphsOfRow(context, sourceCell, targetCell, listManager)
   }
 
   await context.sync()
 }
 
-async function processStandard(context: Word.RequestContext) {
+export async function extendTable(context: Word.RequestContext) {
   // Get the selected range
   const selection = context.document.getSelection()
   // Load parentTable property to determine if the selection is inside a table
   selection.load("parentTableOrNullObject")
   await context.sync()
 
-  const tableOrNullObject = selection.parentTableOrNullObject
+  const table = selection.parentTableOrNullObject
 
-  if (tableOrNullObject.isNullObject) {
+  if (table.isNullObject) {
     throw new Error("The selection is not inside a table.")
   }
-  await _extendTable(context, tableOrNullObject)
-}
-
-export async function extendTable() {
-  await Word.run(async context => {
-    try {
-      await processStandard(context)
-    } catch (e) {
-      console.log(`error: ${e}`)
-    }
-  })
+  await _extendTable(context, table)
 }

@@ -5,8 +5,7 @@ import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"
 import {AddSprachklausel} from "../AddSprachKlausel"
 import React from "react"
-import {createTranslation} from "../../../state/translate/translate"
-import {extendTable} from "../../../state/translate/extendTable"
+import {createTranslation, extendOneColumnTable} from "../../../state/translate/translate"
 
 export function Translate2({
   variant,
@@ -119,7 +118,7 @@ export function Translate2({
           <Button
             size="large"
             variant="contained"
-            onClick={extendTable}
+            onClick={extendOneColumnTable}
           >
             Extend Table
           </Button>

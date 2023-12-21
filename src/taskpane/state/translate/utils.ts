@@ -22,8 +22,7 @@ type ListManagerOptions = {
 }
 
 export class ListManager {
-  originalList: Word.List | undefined = undefined
-  newList: Word.List | undefined = undefined
+  newListCache: Map<number, Word.List> = new Map()
   private options: ListManagerOptions
 
   constructor(
@@ -33,15 +32,9 @@ export class ListManager {
     this.options = options || {}
   }
 
-  private clearLists() {
-    this.originalList = undefined
-    this.newList = undefined
-  }
-
-  private async startNewLists(oldParagraph: Word.Paragraph, newParagraph: Word.Paragraph) {
-    this.originalList = oldParagraph.listOrNullObject
-    this.newList = newParagraph.startNewList()
-    this.newList.load("id")
+  private async startNewList(oldParagraph: Word.Paragraph, newParagraph: Word.Paragraph) {
+    const newList = newParagraph.startNewList()
+    newList.load("id")
     await this.context.sync()
     if (!oldParagraph.listItemOrNullObject.isNullObject) {
       newParagraph.set({
@@ -50,6 +43,7 @@ export class ListManager {
         },
       })
     }
+    return newList
   }
 
   private setLevelType(newList: Word.List, levelTypes: Word.ListLevelType, level: number) {
@@ -70,21 +64,23 @@ export class ListManager {
 
   async updateLists(originalParagraph: Word.Paragraph, newParagraph: Word.Paragraph) {
     if (originalParagraph.listOrNullObject.isNullObject) {
-      this.clearLists()
       return
     }
-    if (this.originalList === undefined || this.originalList.id !== originalParagraph.listOrNullObject.id) {
-      await this.startNewLists(originalParagraph, newParagraph)
+    const sourceList = originalParagraph.listOrNullObject
+    if (!this.newListCache.has(sourceList.id)) {
+      const newList = await this.startNewList(originalParagraph, newParagraph)
+      this.newListCache.set(sourceList.id, newList)
       if (this.options.logOnListChange) {
         getLog().addMessage(`List occured`)
       }
-      this.copyListProperties(this.originalList, this.newList)
+      this.copyListProperties(sourceList, newList)
     } else {
+      const newList = this.newListCache.get(sourceList.id)
       let level = 0
       if (!originalParagraph.listItemOrNullObject.isNullObject) {
         level = originalParagraph.listItemOrNullObject.level
       }
-      newParagraph.attachToList(this.newList.id, level)
+      newParagraph.attachToList(newList.id, level)
     }
   }
 }
