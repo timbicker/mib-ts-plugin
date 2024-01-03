@@ -69,12 +69,20 @@ async function updateAllParagraphsOfRow(
   }
 }
 
+async function sleep() {
+  return new Promise(resolve => {
+    setTimeout(resolve, 500)
+  })
+}
+
 async function _extendTable(context: Word.RequestContext, table: Word.Table) {
   table.addColumns("End", 1)
   table.load("rows/items")
   table.set({
     width: 450,
   })
+  await context.sync()
+  await sleep()
   await context.sync()
 
   const rowArray = getRowArray(table)
