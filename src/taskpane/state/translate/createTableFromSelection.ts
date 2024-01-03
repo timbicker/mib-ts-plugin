@@ -9,6 +9,7 @@ type SortedParagraphs =
   | {
       type: "table"
       ooxml: OfficeExtension.ClientResult<string>
+      numParagraphs: number
     }
   | {
       type: "image"
@@ -41,7 +42,7 @@ async function getSortedParagraphs(
     } else {
       const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
       await context.sync()
-      sortedParagraphs.push({ooxml, type: "table"})
+      sortedParagraphs.push({ooxml, type: "table", numParagraphs: 1})
     }
   }
 
@@ -56,6 +57,9 @@ async function getSortedParagraphs(
     if (paragraphType === "table") {
       if (lastSortedParagraph.type !== "table") {
         await addNewParagraph(paragraphType, paragraph)
+      }
+      if (lastSortedParagraph.type === "table") {
+        lastSortedParagraph.numParagraphs += 1
       }
     } else if (paragraphType === "image") {
       if (lastSortedParagraph.type !== "image") {
@@ -89,6 +93,7 @@ async function addTwoColumnTable(
   const rightListManager = new ListManager(context)
   // Iterate through the non-empty paragraphs and set each cell's value
   for (let i = 0; i < paragraphs.length; i++) {
+    updateProgress()
     const cellLeft = table.rows.items[i].cells.items[0]
     const cellRight = table.rows.items[i].cells.items[1]
     const originalParagraph = paragraphs[i]
@@ -118,6 +123,16 @@ async function detachFromListIfPossible(context: Word.RequestContext, paragraph:
   } catch (e) {
     // nothing to do here
   }
+}
+
+let progress = 0
+function updateProgress(inc?: number) {
+  progress += inc || 1
+  getLog().setProcessedParagraphs(progress)
+}
+
+function resetProgress() {
+  progress = 0
 }
 
 export async function createTableFromSelection(context: Word.RequestContext, selection: Word.Range) {
@@ -150,11 +165,15 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
 
   await detachFromListIfPossible(context, cleanupParagraph)
 
+  resetProgress()
+  getLog().setTotalParagraphs(nonEmptyParagraphs.length)
+
   for (const sortedParagraph of sortedParagraphs) {
     if (sortedParagraph.type === "standard") {
       range = await addTwoColumnTable(context, range, sortedParagraph.paragraphs)
     }
     if (sortedParagraph.type === "table") {
+      updateProgress(sortedParagraph.numParagraphs)
       const p1 = addEmptyParagraphAtEndOfRange(range)
       range = p1.range
       range = range.insertOoxml(sortedParagraph.ooxml.value, Word.InsertLocation.after)
@@ -173,6 +192,8 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
       await context.sync()
     }
   }
+
+  getLog().setProcessedParagraphs(nonEmptyParagraphs.length)
 
   cleanupParagraph.delete()
 
