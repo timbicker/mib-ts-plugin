@@ -2,6 +2,7 @@
 Takes the first column and adds it as another column.
  */
 import {ListManager, updateParagraph} from "./utils"
+import {getLog} from "../translationLog"
 
 function getCellArray(row: Word.TableRow): Word.TableCell[] {
   const cells: Word.TableCell[] = []
@@ -88,9 +89,12 @@ async function _extendTable(context: Word.RequestContext, table: Word.Table) {
   const rowArray = getRowArray(table)
 
   const listManager = new ListManager(context, {logOnListChange: true})
+  getLog().setTotalParagraphs(rowArray.length)
   // Iterate through the non-empty paragraphs and set each cell's value
-  for (const row of rowArray) {
+  for (let i = 0; i < rowArray.length; i++) {
+    const row = rowArray[i]
     row.load("cells/items")
+    getLog().setProcessedParagraphs(i + 1)
     await context.sync()
     const cells = getCellArray(row)
     const sourceCell = cells[0]

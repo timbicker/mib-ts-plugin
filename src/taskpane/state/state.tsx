@@ -1,16 +1,18 @@
 import React, {createContext, PropsWithChildren, useContext, useState} from "react"
 import {Country} from "../components/languages"
 import * as translate from "./translate/translate"
-import {TranslationLog, TranslationLogState, setLog as setLogModule} from "./translationLog"
+import {TranslationLog, TranslationLogState, setLog as setLogModule, LogMessage} from "./translationLog"
 
 const AppStateContext = createContext<FormPageState | null>(null)
 
 type Pages = "new" | "new/standard" | "new/table" | "update" | "settings" | "settings/about" | "settings/plan"
 
-function useTranslationLog(): TranslationLogState {
+function useTranslationLog() {
   const [_log, setLog] = useState<TranslationLog>([])
+  const [processedParagraphs, _setProcessedParagraphs] = useState<number>(0)
+  const [totalParagraphs, setTotalParagraphs] = useState<number>(0)
 
-  function addMessage(message: string) {
+  function addMessage(message: LogMessage) {
     setLog(oldLog => [...oldLog, message])
   }
 
@@ -18,21 +20,33 @@ function useTranslationLog(): TranslationLogState {
     setLog([])
   }
 
-  const data = {
+  function setProcessedParagraphs(nr: number) {
+    if (nr > totalParagraphs) _setProcessedParagraphs(totalParagraphs)
+    else _setProcessedParagraphs(nr)
+  }
+
+  const data: TranslationLogState = {
     log: _log,
     addMessage,
     clear,
+    processedParagraphs,
+    totalParagraphs,
+    setProcessedParagraphs,
+    setTotalParagraphs,
   }
 
   setLogModule(data)
-  return data
+
+  const translationProgress =
+    totalParagraphs === 0 ? 0 : Math.round((processedParagraphs / totalParagraphs) * 100)
+  return {...data, translationProgress}
 }
 
 export const useAppStateProvider = () => {
   const [page, setPage] = useState<Pages>("new")
   const [language, setLanguage] = useState<Country>()
   const [isTranslating, setIsTranslating] = useState<"idle" | "translating" | "success">("idle")
-  const {log, addMessage, clear} = useTranslationLog()
+  const log = useTranslationLog()
 
   async function updateTranslation() {
     setIsTranslating("translating")

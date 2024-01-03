@@ -3,7 +3,7 @@ import Button from "@mui/material/Button"
 import Stack from "@mui/material/Stack"
 import {Box} from "@mui/system"
 import Typography from "@mui/material/Typography"
-import {useAppState} from "../state/state"
+import {useAppState} from "../../state/state"
 
 export const ContactUs = () => {
   // todo add user

@@ -1,7 +1,29 @@
-export type TranslationLog = string[]
+export type ListMessage = {
+  type: "list"
+}
+
+export type TableMessage = {
+  type: "table"
+}
+
+export type ImageMessage = {
+  type: "image"
+}
+
+export type ErrorMessage = {
+  type: "error"
+  message: string
+}
+
+export type LogMessage = ListMessage | TableMessage | ImageMessage | ErrorMessage
+export type TranslationLog = LogMessage[]
 export type TranslationLogState = {
   log: TranslationLog
-  addMessage: (message: string) => void
+  processedParagraphs: number
+  totalParagraphs: number
+  setTotalParagraphs: (total: number) => void
+  setProcessedParagraphs: (processed: number) => void
+  addMessage: (message: LogMessage) => void
   clear: () => void
 }
 

@@ -129,7 +129,7 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
   await context.sync()
 
   if (selection.inlinePictures.items.length > 0) {
-    getLog().addMessage("image found")
+    getLog().addMessage({type: "image"})
   }
 
   const nonEmptyParagraphs = selection.paragraphs.items.filter(p => p.text.trim() !== "")
@@ -160,7 +160,7 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
       range = range.insertOoxml(sortedParagraph.ooxml.value, Word.InsertLocation.after)
       const p2 = addEmptyParagraphAtEndOfRange(range)
       range = p2.range
-      getLog().addMessage("table found")
+      getLog().addMessage({type: "table"})
       await context.sync()
     }
     if (sortedParagraph.type === "image") {
@@ -169,7 +169,7 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
       range = range.insertOoxml(sortedParagraph.ooxml.value, Word.InsertLocation.after)
       const p2 = addEmptyParagraphAtEndOfRange(range)
       range = p2.range
-      getLog().addMessage("image found")
+      getLog().addMessage({type: "image"})
       await context.sync()
     }
   }

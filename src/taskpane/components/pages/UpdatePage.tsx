@@ -1,12 +1,12 @@
 import React from "react"
 import Stack from "@mui/material/Stack"
-import {LanguageSelect} from "./LanguageSelect"
+import {LanguageSelect} from "../LanguageSelect"
 import {Button} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
-import {ExplanationStep} from "./ExplanationStep"
+import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
-import {useAppState} from "../state/state"
-import {TranslateLog} from "./TranslateLog"
+import {useAppState} from "../../state/state"
+import {TranslateLog} from "../TranslateLog"
 
 export function UpdatePage() {
   const {isTranslating, createTranslationFromStandard} = useAppState()

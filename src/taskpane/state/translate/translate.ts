@@ -10,7 +10,7 @@ export async function createTranslation() {
       await createTableFromSelection(context, selection)
     } catch (e) {
       if (e instanceof Error) {
-        getLog().addMessage(`error: ${e.message}`)
+        getLog().addMessage({type: "error", message: e.message})
       }
       console.log(`error: ${e}`)
     }

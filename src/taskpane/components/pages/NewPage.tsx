@@ -6,11 +6,11 @@ import CardHeader from "@mui/material/CardHeader"
 import Stack from "@mui/material/Stack"
 import {Button, CardActionArea} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
-import {LanguageSelect} from "./LanguageSelect"
-import {ExplanationStep} from "./ExplanationStep"
+import {LanguageSelect} from "../LanguageSelect"
+import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
-import {useAppState} from "../state/state"
-import {TranslateLog} from "./TranslateLog"
+import {useAppState} from "../../state/state"
+import {TranslateLog} from "../TranslateLog"
 
 function SelectionCard({title, content, onClick}: {title: string; content: string; onClick: () => void}) {
   function renderContent() {
