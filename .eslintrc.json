@@ -5,7 +5,8 @@
   ],
   "extends": [
     "plugin:office-addins/react",
-    "prettier"
+    "prettier",
+    "plugin:storybook/recommended"
   ],
   "rules": {
     "no-undef": "off",

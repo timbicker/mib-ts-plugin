@@ -71,7 +71,8 @@ export class ListManager {
       const newList = await this.startNewList(originalParagraph, newParagraph)
       this.newListCache.set(sourceList.id, newList)
       if (this.options.logOnListChange) {
-        getLog().addMessage({type: "list"})
+        this.context.trackedObjects.add(newParagraph)
+        getLog().addMessage({type: "list", paragraph: newParagraph})
       }
       this.copyListProperties(sourceList, newList)
     } else {

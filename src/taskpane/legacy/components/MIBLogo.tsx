@@ -1,5 +1,5 @@
 import {Box} from "@mui/system"
-import {mibTürkis} from "../../theme"
+import {mibTürkis} from "../theme"
 import logo from "@assets/icon-64.png"
 import Typography from "@mui/material/Typography"
 import React from "react"

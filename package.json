@@ -23,7 +23,9 @@
     "start:web": "office-addin-debugging start manifest.xml web",
     "stop": "office-addin-debugging stop manifest.xml",
     "validate": "office-addin-manifest validate manifest.xml",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -42,6 +44,14 @@
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-typescript": "^7.13.0",
+    "@storybook/addon-essentials": "^7.6.8",
+    "@storybook/addon-interactions": "^7.6.8",
+    "@storybook/addon-links": "^7.6.8",
+    "@storybook/addon-onboarding": "^1.0.10",
+    "@storybook/blocks": "^7.6.8",
+    "@storybook/react": "^7.6.8",
+    "@storybook/react-webpack5": "^7.6.8",
+    "@storybook/test": "^7.6.8",
     "@types/office-js": "^1.0.256",
     "@types/office-runtime": "^1.0.23",
     "@types/react": "^17.0.39",
@@ -55,6 +65,7 @@
     "eslint-plugin-office-addins": "^2.1.5",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-storybook": "^0.6.15",
     "file-loader": "^6.2.0",
     "html-loader": "^4.1.0",
     "html-webpack-plugin": "^5.5.0",
@@ -70,6 +81,7 @@
     "prettier": "^3.0.3",
     "process": "^0.11.10",
     "source-map-loader": "^3.0.0",
+    "storybook": "^7.6.8",
     "ts-loader": "^9.4.1",
     "typescript": "^4.3.5",
     "webpack": "^5.76.3",

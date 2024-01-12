@@ -12,7 +12,7 @@ import {
 } from "@mui/material"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import {mibBlack} from "../../theme"
+import {mibBlack} from "../theme"
 import RefreshIcon from "@mui/icons-material/Refresh"
 
 export const Usage = ({scrollToBottom, user, isUpdatingSession, updateSession, accordSumStyles}: any) => {

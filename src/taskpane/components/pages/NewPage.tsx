@@ -10,7 +10,7 @@ import {LanguageSelect} from "../LanguageSelect"
 import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
-import {TranslateLog} from "../TranslateLog"
+import {TranslateLogProvider} from "../TranslationLog"
 
 function SelectionCard({title, content, onClick}: {title: string; content: string; onClick: () => void}) {
   function renderContent() {
@@ -73,7 +73,7 @@ function ChooseTranslationVariantCards() {
 function TableTranslation() {
   const {isTranslating, createTranslationFromTable} = useAppState()
   if (isTranslating !== "idle") {
-    return <TranslateLog />
+    return <TranslateLogProvider />
   }
   return (
     <Stack
@@ -116,7 +116,7 @@ function TableTranslation() {
 function StandardTranslation() {
   const {isTranslating, createTranslationFromStandard} = useAppState()
   if (isTranslating !== "idle") {
-    return <TranslateLog />
+    return <TranslateLogProvider />
   }
   return (
     <Stack

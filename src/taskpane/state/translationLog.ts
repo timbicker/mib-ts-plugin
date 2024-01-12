@@ -1,9 +1,11 @@
 export type ListMessage = {
   type: "list"
+  paragraph: Word.Paragraph
 }
 
 export type TableMessage = {
   type: "table"
+  table: Word.Table
 }
 
 export type ImageMessage = {
@@ -16,9 +18,9 @@ export type ErrorMessage = {
 }
 
 export type LogMessage = ListMessage | TableMessage | ImageMessage | ErrorMessage
-export type TranslationLog = LogMessage[]
+export type TranslationLogMessages = LogMessage[]
 export type TranslationLogState = {
-  log: TranslationLog
+  log: TranslationLogMessages
   processedParagraphs: number
   totalParagraphs: number
   setTotalParagraphs: (total: number) => void

@@ -41,6 +41,7 @@ async function getSortedParagraphs(
       sortedParagraphs.push({ooxml, type: "image"})
     } else {
       const ooxml = paragraph.parentTableOrNullObject.getRange().getOoxml()
+      const id = paragraph.parentTableOrNullObject
       await context.sync()
       sortedParagraphs.push({ooxml, type: "table", numParagraphs: 1})
     }
@@ -101,8 +102,11 @@ async function addTwoColumnTable(
     const paragraphRight = cellRight.body.paragraphs.getFirst()
     updateParagraph(paragraphLeft, originalParagraph, originalParagraph.text.trim())
     updateParagraph(paragraphRight, originalParagraph, originalParagraph.text.trim())
+    paragraphRight.select("Start")
     await leftListManager.updateLists(originalParagraph, paragraphLeft)
     await rightListManager.updateLists(originalParagraph, paragraphRight)
+    // we sync here such that the progress update is as fast as the visual updates in word
+    await context.sync()
   }
 
   const range = table.getRange("Whole")
@@ -128,6 +132,7 @@ async function detachFromListIfPossible(context: Word.RequestContext, paragraph:
 let progress = 0
 function updateProgress(inc?: number) {
   progress += inc || 1
+  console.log(`progress: ${progress}`)
   getLog().setProcessedParagraphs(progress)
 }
 
@@ -167,6 +172,7 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
 
   resetProgress()
   getLog().setTotalParagraphs(nonEmptyParagraphs.length)
+  console.log(`nonEmptyParagraphs.length: ${nonEmptyParagraphs.length}`)
 
   for (const sortedParagraph of sortedParagraphs) {
     if (sortedParagraph.type === "standard") {
@@ -177,9 +183,12 @@ export async function createTableFromSelection(context: Word.RequestContext, sel
       const p1 = addEmptyParagraphAtEndOfRange(range)
       range = p1.range
       range = range.insertOoxml(sortedParagraph.ooxml.value, Word.InsertLocation.after)
+      await context.sync()
+      const table = range.tables.getFirst()
+      getLog().addMessage({type: "table", table})
+      context.trackedObjects.add(table)
       const p2 = addEmptyParagraphAtEndOfRange(range)
       range = p2.range
-      getLog().addMessage({type: "table"})
       await context.sync()
     }
     if (sortedParagraph.type === "image") {

@@ -6,12 +6,12 @@ import TranslateIcon from "@mui/icons-material/Translate"
 import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
-import {TranslateLog} from "../TranslateLog"
+import {TranslateLogProvider} from "../TranslationLog"
 
 export function UpdatePage() {
   const {isTranslating, createTranslationFromStandard} = useAppState()
   if (isTranslating !== "translating") {
-    return <TranslateLog />
+    return <TranslateLogProvider />
   }
 
   return (

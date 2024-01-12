@@ -1,14 +1,26 @@
 import React, {createContext, PropsWithChildren, useContext, useState} from "react"
 import {Country} from "../components/languages"
 import * as translate from "./translate/translate"
-import {TranslationLog, TranslationLogState, setLog as setLogModule, LogMessage} from "./translationLog"
+import {
+  TranslationLogMessages,
+  TranslationLogState,
+  setLog as setLogModule,
+  LogMessage,
+} from "./translationLog"
 
 const AppStateContext = createContext<FormPageState | null>(null)
 
-type Pages = "new" | "new/standard" | "new/table" | "update" | "settings" | "settings/about" | "settings/plan"
+export type Pages =
+  | "new"
+  | "new/standard"
+  | "new/table"
+  | "update"
+  | "settings"
+  | "settings/about"
+  | "settings/plan"
 
 function useTranslationLog() {
-  const [_log, setLog] = useState<TranslationLog>([])
+  const [_log, setLog] = useState<TranslationLogMessages>([])
   const [processedParagraphs, _setProcessedParagraphs] = useState<number>(0)
   const [totalParagraphs, setTotalParagraphs] = useState<number>(0)
 

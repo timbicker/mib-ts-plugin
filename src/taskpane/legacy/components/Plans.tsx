@@ -19,7 +19,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material"
-import {mibGrey, mibLila} from "../../theme"
+import {mibGrey, mibLila} from "../theme"
 import {Box} from "@mui/system"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import moment from "moment/moment"

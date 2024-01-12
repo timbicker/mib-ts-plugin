@@ -1,5 +1,5 @@
 import React, {useEffect} from "react"
-import {mibTürkis} from "../../theme"
+import {mibTürkis} from "../theme"
 import {Box} from "@mui/system"
 import ApiInput from "./ApiInput"
 import {Alert, Divider} from "@mui/material"

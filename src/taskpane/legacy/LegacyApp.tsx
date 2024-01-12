@@ -1,7 +1,7 @@
 import React from "react"
 import Progress from "./components/Progress"
 import {ThemeProvider} from "@emotion/react"
-import {theme} from "../theme"
+import {theme} from "./theme"
 import {AuthContainer} from "./components/AuthContainer"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

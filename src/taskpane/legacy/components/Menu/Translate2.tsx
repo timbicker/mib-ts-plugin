@@ -1,5 +1,5 @@
 import {Box} from "@mui/system"
-import {mibBlack, mibTürkis} from "../../../theme"
+import {mibBlack, mibTürkis} from "../../theme"
 import {Avatar, Button} from "@mui/material"
 import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"
