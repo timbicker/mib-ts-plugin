@@ -1,16 +1,22 @@
-import React from "react"
+import React, {useState} from "react"
+import FormGroup from "@mui/material/FormGroup"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Checkbox from "@mui/material/Checkbox"
 import Box from "@mui/material/Box"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import CardHeader from "@mui/material/CardHeader"
 import Stack from "@mui/material/Stack"
-import {Button, CardActionArea} from "@mui/material"
+import {Button, CardActionArea, Divider, Link} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
 import {LanguageSelect} from "../LanguageSelect"
 import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
 import {TranslateLogProvider} from "../TranslationLog"
+import Paper from "@mui/material/Paper"
+import {TranslationPaper} from "./TranslationPaper"
+import {extendOneColumnTable} from "../../state/translate/translate"
 
 function SelectionCard({title, content, onClick}: {title: string; content: string; onClick: () => void}) {
   function renderContent() {
@@ -40,119 +46,98 @@ function SelectionCard({title, content, onClick}: {title: string; content: strin
   )
 }
 
-function ChooseTranslationVariantCards() {
-  const {setPage} = useAppState()
-  return (
-    <Stack
-      direction={"column"}
-      spacing={3}
-      alignItems={"center"}
-      justifyContent={"center"}
-      pt={3}
-      pl={3}
-      pr={3}
-    >
-      <SelectionCard
-        title={"Standard"}
-        content={
-          "Choose this option if your document is not within a table.\n\nMib will transform your document into a multi-row, two-column table, where the left column is your original content and the right column is the translation."
-        }
-        onClick={() => setPage("new/standard")}
-      />
-      <SelectionCard
-        title={"From Table"}
-        content={
-          "Choose this option if your document is formatted as a one-column table.\n\nMib will add another column and translate your document row by row."
-        }
-        onClick={() => setPage("new/table")}
-      />
-    </Stack>
-  )
+type TranslationSettings = {
+  table: boolean
 }
 
-function TableTranslation() {
-  const {isTranslating, createTranslationFromTable} = useAppState()
-  if (isTranslating !== "idle") {
-    return <TranslateLogProvider />
-  }
+function TranslationSettings({
+  translationSettings,
+  setTranslationSettings,
+}: {
+  translationSettings: TranslationSettings
+  setTranslationSettings: (s: TranslationSettings) => void
+}) {
   return (
-    <Stack
-      direction={"column"}
-      spacing={3}
-      alignItems={"stretch"}
-      justifyContent={"center"}
-      pt={3}
-      pl={3}
-      pr={3}
-    >
-      <Typography variant={"h6"}>From Table</Typography>
-      <ExplanationStep
-        nr={1}
-        text={
-          "Ensure your table has only one column and contains no lists that are nested more than two levels."
-        }
-      />
-      <ExplanationStep
-        nr={1}
-        text={"Select the table."}
-      />
-      <ExplanationStep
-        nr={2}
-        text={"Choose a language for translation."}
-        content={<LanguageSelect />}
-      />
-      <Button
-        variant={"outlined"}
-        startIcon={<TranslateIcon />}
-        sx={{pl: 2, pr: 2}}
-        onClick={createTranslationFromTable}
+    <TranslationPaper title={"Configuration"}>
+      <Box
+        sx={{
+          mt: -1,
+          display: "flex",
+          alignItems: "center",
+        }}
       >
-        Translate
-      </Button>
-    </Stack>
-  )
-}
-
-function StandardTranslation() {
-  const {isTranslating, createTranslationFromStandard} = useAppState()
-  if (isTranslating !== "idle") {
-    return <TranslateLogProvider />
-  }
-  return (
-    <Stack
-      direction={"column"}
-      spacing={3}
-      alignItems={"stretch"}
-      justifyContent={"center"}
-      pt={3}
-      pl={3}
-      pr={3}
-    >
-      <Typography variant={"h6"}>Standard</Typography>
-      <ExplanationStep
-        nr={1}
-        text={"Select the text you want to translate."}
-      />
-      <ExplanationStep
-        nr={2}
-        text={"Choose a language for translation."}
-        content={<LanguageSelect />}
-      />
-      <Button
-        variant={"outlined"}
-        startIcon={<TranslateIcon />}
-        sx={{pl: 2, pr: 2}}
-        onClick={createTranslationFromStandard}
-      >
-        Translate
-      </Button>
-    </Stack>
+        <Checkbox
+          checked={translationSettings.table}
+          onClick={() => setTranslationSettings({table: !translationSettings.table})}
+        />
+        <Typography variant={"subtitle2"}>
+          {"Table formatted. "}
+          <Link
+            href={"https://google.com"}
+            target={"_blank"}
+          >
+            {"Read more."}
+          </Link>
+        </Typography>
+      </Box>
+    </TranslationPaper>
   )
 }
 
 export function NewPage() {
-  const {page, setPage} = useAppState()
-  if (page === "new/standard") return <StandardTranslation />
-  if (page === "new/table") return <TableTranslation />
-  return <ChooseTranslationVariantCards />
+  const {isTranslating, createTranslationFromStandard} = useAppState()
+  const [settings, setSettings] = useState({table: false})
+  if (isTranslating !== "idle") {
+    return <TranslateLogProvider />
+  }
+
+  function getStep1Text() {
+    const select = settings.table ? "table" : "text"
+    return `Select the ${select} you want to translate.`
+  }
+  return (
+    <Stack
+      direction={"column"}
+      alignItems={"stretch"}
+      justifyContent={"center"}
+      pt={2}
+      pl={3}
+      pr={3}
+      gap={2}
+    >
+      <TranslationSettings
+        setTranslationSettings={setSettings}
+        translationSettings={settings}
+      />
+      <TranslationPaper title={"Preparation"}>
+        <Box
+          sx={{
+            pt: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            gap: 3,
+          }}
+        >
+          <ExplanationStep
+            nr={1}
+            text={getStep1Text()}
+          />
+          <ExplanationStep
+            nr={2}
+            text={"Choose a language for translation."}
+            content={<LanguageSelect />}
+          />
+        </Box>
+      </TranslationPaper>
+      <Button
+        variant={"contained"}
+        startIcon={<TranslateIcon />}
+        sx={{pl: 2, pr: 2}}
+        onClick={settings.table ? extendOneColumnTable : createTranslationFromStandard}
+      >
+        New Translation
+      </Button>
+    </Stack>
+  )
 }

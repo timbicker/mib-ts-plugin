@@ -91,7 +91,7 @@ async function addTwoColumnTable(
   await context.sync()
 
   const leftListManager = new ListManager(context, {logOnListChange: true})
-  const rightListManager = new ListManager(context)
+  const rightListManager = new ListManager(context, {logOnListChange: true})
   // Iterate through the non-empty paragraphs and set each cell's value
   for (let i = 0; i < paragraphs.length; i++) {
     updateProgress()

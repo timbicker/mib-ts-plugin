@@ -2,12 +2,12 @@ import {Pages, useAppState} from "../state/state"
 import React from "react"
 import Box from "@mui/material/Box"
 import {MIBLogo} from "./MIBLogo"
-import BottomNavigation from "@mui/material/BottomNavigation"
-import BottomNavigationAction from "@mui/material/BottomNavigationAction"
 import TranslateIcon from "@mui/icons-material/Translate"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import SettingsIcon from "@mui/icons-material/Settings"
 import {Divider} from "@mui/material"
+import Tabs from "@mui/material/Tabs"
+import Tab from "@mui/material/Tab"
 
 export function TopBar({page, setPage}: {page: Pages; setPage: (page: Pages) => void}) {
   function pageToIndex() {
@@ -36,25 +36,24 @@ export function TopBar({page, setPage}: {page: Pages; setPage: (page: Pages) => 
       <Box py={2}>
         <MIBLogo />
       </Box>
-      <BottomNavigation
-        sx={{backgroundColor: "inherit"}}
-        showLabels
+      <Tabs
         value={pageToIndex()}
         onChange={handleChange}
+        variant={"fullWidth"}
       >
-        <BottomNavigationAction
+        <Tab
+          icon={<TranslateIcon fontSize={"small"} />}
           label="New Translation"
-          icon={<TranslateIcon />}
         />
-        <BottomNavigationAction
+        <Tab
+          icon={<AutorenewIcon fontSize={"small"} />}
           label="Update Translation"
-          icon={<AutorenewIcon />}
         />
-        <BottomNavigationAction
+        <Tab
+          icon={<SettingsIcon fontSize={"small"} />}
           label="Settings"
-          icon={<SettingsIcon />}
         />
-      </BottomNavigation>
+      </Tabs>
       <Divider />
     </Box>
   )

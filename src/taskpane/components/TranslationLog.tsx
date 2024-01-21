@@ -181,9 +181,27 @@ function Log({log}: {log: TranslationLogMessages}) {
 export type TranslationLogProps = {
   translationProgress: number
   logMessages: TranslationLogMessages
+  resetTranslation: () => void
 }
 
-export function TranslationLog({translationProgress, logMessages}: TranslationLogProps) {
+export function TranslationLog({translationProgress, logMessages, resetTranslation}: TranslationLogProps) {
+  function renderNewTranslationButton() {
+    if (translationProgress >= 100) {
+      return (
+        <>
+          <Button
+            variant={"outlined"}
+            onClick={resetTranslation}
+          >
+            New Translation
+          </Button>
+          {logMessages.length > 0 ? <Divider sx={{mt: 2, mb: 2}} /> : null}
+        </>
+      )
+    }
+    return null
+  }
+
   return (
     <PageContainer
       sx={{
@@ -192,18 +210,20 @@ export function TranslationLog({translationProgress, logMessages}: TranslationLo
     >
       <TranslateStatus progress={translationProgress} />
       <Divider sx={{mt: 2, mb: 2}} />
+      {renderNewTranslationButton()}
       <Log log={logMessages} />
     </PageContainer>
   )
 }
 
 export function TranslateLogProvider() {
-  const {log} = useAppState()
+  const {log, resetTranslation} = useAppState()
 
   return (
     <TranslationLog
       translationProgress={log.translationProgress}
       logMessages={log.log}
+      resetTranslation={resetTranslation}
     />
   )
 }

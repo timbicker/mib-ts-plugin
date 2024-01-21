@@ -10,14 +10,7 @@ import {
 
 const AppStateContext = createContext<FormPageState | null>(null)
 
-export type Pages =
-  | "new"
-  | "new/standard"
-  | "new/table"
-  | "update"
-  | "settings"
-  | "settings/about"
-  | "settings/plan"
+export type Pages = "new" | "update" | "settings" | "settings/about" | "settings/plan"
 
 function useTranslationLog() {
   const [_log, setLog] = useState<TranslationLogMessages>([])
@@ -30,6 +23,8 @@ function useTranslationLog() {
 
   function clear() {
     setLog([])
+    _setProcessedParagraphs(0)
+    setTotalParagraphs(0)
   }
 
   function setProcessedParagraphs(nr: number) {
@@ -78,6 +73,11 @@ export const useAppStateProvider = () => {
     setIsTranslating("success")
   }
 
+  function resetTranslation() {
+    log.clear()
+    setIsTranslating("idle")
+  }
+
   return {
     page,
     setPage,
@@ -85,6 +85,7 @@ export const useAppStateProvider = () => {
     setLanguage,
     updateTranslation,
     createTranslationFromStandard,
+    resetTranslation,
     createTranslationFromTable,
     isTranslating,
     log,

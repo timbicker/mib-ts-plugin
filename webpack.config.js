@@ -102,6 +102,9 @@ module.exports = async (env, options) => {
       hot: true,
       headers: {
         "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "private, no-cache, no-store",
+        Pragma: "no-cache",
+        Expires: "-1",
       },
       server: {
         type: "https",

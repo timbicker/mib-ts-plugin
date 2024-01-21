@@ -7,10 +7,13 @@ import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
 import {TranslateLogProvider} from "../TranslationLog"
+import {TranslationPaper} from "./TranslationPaper"
+import Box from "@mui/material/Box"
+import {updateTranslation} from "../../state/translate/translate"
 
 export function UpdatePage() {
   const {isTranslating, createTranslationFromStandard} = useAppState()
-  if (isTranslating !== "translating") {
+  if (isTranslating === "translating") {
     return <TranslateLogProvider />
   }
 
@@ -20,29 +23,40 @@ export function UpdatePage() {
       spacing={3}
       alignItems={"stretch"}
       justifyContent={"center"}
-      pt={3}
+      pt={2}
       pl={3}
       pr={3}
     >
-      <Typography variant={"h6"}>Update</Typography>
-      <ExplanationStep
-        nr={1}
-        text={
-          "Click into the cell that should be translated. Mib will always translate from the left cell to the right cell."
-        }
-      />
-      <ExplanationStep
-        nr={2}
-        text={"Choose a language for translation."}
-        content={<LanguageSelect />}
-      />
+      <TranslationPaper title={"Preparation"}>
+        <Box
+          sx={{
+            pt: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            gap: 3,
+          }}
+        >
+          <ExplanationStep
+            nr={1}
+            text={
+              "Click into the cell that should be translated. Make it bilingual will always translate from the left cell to the right cell."
+            }
+          />
+          <ExplanationStep
+            nr={2}
+            text={"Choose a language for translation."}
+            content={<LanguageSelect />}
+          />
+        </Box>
+      </TranslationPaper>
       <Button
-        variant={"outlined"}
+        variant={"contained"}
         startIcon={<TranslateIcon />}
         sx={{pl: 2, pr: 2}}
-        onClick={createTranslationFromStandard}
+        onClick={updateTranslation}
       >
-        Translate
+        Update Translation
       </Button>
     </Stack>
   )

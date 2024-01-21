@@ -6,4 +6,21 @@ export const theme = createTheme({
       textTransform: "none",
     },
   },
+  components: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+        variant: "outlined",
+      },
+      styleOverrides: {
+        root: ({theme}) =>
+          theme.unstable_sx({
+            pt: 1,
+            pb: 1,
+            pl: 2,
+            pr: 2,
+          }),
+      },
+    },
+  },
 })
