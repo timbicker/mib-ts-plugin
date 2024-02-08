@@ -7,7 +7,7 @@ import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
 import {TranslateLogProvider} from "../TranslationLog"
-import {TranslationPaper} from "./TranslationPaper"
+import {TranslationPaper} from "../TranslationPaper"
 import Box from "@mui/material/Box"
 import {updateTranslation} from "../../state/translate/translate"
 

@@ -1,7 +1,12 @@
 import {createTheme} from "@mui/material/styles"
 
+export const mibBlack = "rgb(90,90,90)"
+
 export const theme = createTheme({
   typography: {
+    allVariants: {
+      color: mibBlack,
+    },
     button: {
       textTransform: "none",
     },

@@ -1,12 +1,12 @@
 import {ThemeProvider} from "@emotion/react"
 import {TopBar} from "../taskpane/components/NavigationMenu"
-import {Pages} from "../taskpane/state/state"
+import {Page} from "../taskpane/state/state"
 import React, {PropsWithChildren} from "react"
 import Box from "@mui/material/Box"
 import {Paper} from "@mui/material"
 import {theme} from "../taskpane/components/theme"
 
-export function DummyAppSceleton({page, children}: PropsWithChildren<{page: Pages}>) {
+export function DummyAppSceleton({page, children}: PropsWithChildren<{page: Page}>) {
   return (
     <ThemeProvider theme={theme}>
       <TopBar

@@ -2,8 +2,9 @@ import {Box} from "@mui/system"
 import logo from "@assets/icon-64.png"
 import Typography from "@mui/material/Typography"
 import React from "react"
+import {SxProps} from "@mui/material"
 
-export function MIBLogo() {
+export function MIBLogo({sx}: {sx?: SxProps}) {
   return (
     <Box
       sx={{
@@ -14,6 +15,7 @@ export function MIBLogo() {
         alignItems: "center",
         flexDirection: "row",
         gap: "12px",
+        ...sx,
       }}
     >
       <Box

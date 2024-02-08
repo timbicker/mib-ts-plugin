@@ -6,7 +6,7 @@ import {ListMessage, LogMessage, TableMessage, TranslationLogMessages} from "../
 import Typography from "@mui/material/Typography"
 import {Alert, AlertTitle, Button, Divider, Link} from "@mui/material"
 import {jumpToList, jumpToTable} from "../state/translate/jumpToElement"
-import {PageContainer} from "./pages/PageContainer"
+import {PageContainer} from "./PageContainer"
 
 function LinearProgressWithLabel(props: LinearProgressProps & {value: number}) {
   return (

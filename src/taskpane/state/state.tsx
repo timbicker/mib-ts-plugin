@@ -10,7 +10,17 @@ import {
 
 const AppStateContext = createContext<FormPageState | null>(null)
 
-export type Pages = "new" | "update" | "settings" | "settings/about" | "settings/plan"
+type PagePath = "new" | "update" | "settings" | "settings/about" | "settings/plan"
+
+export const pageNames: Record<PagePath, string> = {
+  new: "New Translation",
+  update: "Update Translation",
+  settings: "Settings",
+  "settings/about": "About Make it Bilingual",
+  "settings/plan": "My Plan",
+}
+
+export type Page = "new" | "update" | "settings" | "settings/about" | "settings/plan"
 
 function useTranslationLog() {
   const [_log, setLog] = useState<TranslationLogMessages>([])
@@ -50,7 +60,7 @@ function useTranslationLog() {
 }
 
 export const useAppStateProvider = () => {
-  const [page, setPage] = useState<Pages>("new")
+  const [page, setPage] = useState<Page>("new")
   const [language, setLanguage] = useState<Country>()
   const [isTranslating, setIsTranslating] = useState<"idle" | "translating" | "success">("idle")
   const log = useTranslationLog()

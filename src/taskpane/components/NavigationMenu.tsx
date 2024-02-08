@@ -1,5 +1,5 @@
-import {Pages, useAppState} from "../state/state"
-import React from "react"
+import {Page, useAppState} from "../state/state"
+import React, {ReactNode} from "react"
 import Box from "@mui/material/Box"
 import {MIBLogo} from "./MIBLogo"
 import TranslateIcon from "@mui/icons-material/Translate"
@@ -9,7 +9,19 @@ import {Divider} from "@mui/material"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
 
-export function TopBar({page, setPage}: {page: Pages; setPage: (page: Pages) => void}) {
+export function TopBarWithoutTabs({children}: {children?: ReactNode}) {
+  return (
+    <Box sx={{position: "sticky", top: 0, zIndex: 10000, backgroundColor: "#f7f7f7"}}>
+      <Box py={2}>
+        <MIBLogo />
+      </Box>
+      {children}
+      <Divider />
+    </Box>
+  )
+}
+
+export function TopBar({page, setPage}: {page: Page; setPage: (page: Page) => void}) {
   function pageToIndex() {
     const mapping = {
       new: 0,
@@ -32,10 +44,7 @@ export function TopBar({page, setPage}: {page: Pages; setPage: (page: Pages) => 
   }
 
   return (
-    <Box sx={{position: "sticky", top: 0, zIndex: 10000, backgroundColor: "#f7f7f7"}}>
-      <Box py={2}>
-        <MIBLogo />
-      </Box>
+    <TopBarWithoutTabs>
       <Tabs
         value={pageToIndex()}
         onChange={handleChange}
@@ -54,8 +63,7 @@ export function TopBar({page, setPage}: {page: Pages; setPage: (page: Pages) => 
           label="Settings"
         />
       </Tabs>
-      <Divider />
-    </Box>
+    </TopBarWithoutTabs>
   )
 }
 

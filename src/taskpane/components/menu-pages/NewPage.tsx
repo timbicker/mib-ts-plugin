@@ -1,50 +1,16 @@
 import React, {useState} from "react"
-import FormGroup from "@mui/material/FormGroup"
-import FormControlLabel from "@mui/material/FormControlLabel"
 import Checkbox from "@mui/material/Checkbox"
 import Box from "@mui/material/Box"
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
-import CardHeader from "@mui/material/CardHeader"
 import Stack from "@mui/material/Stack"
-import {Button, CardActionArea, Divider, Link} from "@mui/material"
+import {Button, CardActionArea, Link} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
 import {LanguageSelect} from "../LanguageSelect"
 import {ExplanationStep} from "../ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
 import {TranslateLogProvider} from "../TranslationLog"
-import Paper from "@mui/material/Paper"
-import {TranslationPaper} from "./TranslationPaper"
+import {TranslationPaper} from "../TranslationPaper"
 import {extendOneColumnTable} from "../../state/translate/translate"
-
-function SelectionCard({title, content, onClick}: {title: string; content: string; onClick: () => void}) {
-  function renderContent() {
-    const paragraphs = content.split("\n")
-    const withBreaks = paragraphs.map((paragraph, index) => {
-      if (index > 0) {
-        return (
-          <span key={index}>
-            <br />
-            {paragraph}
-          </span>
-        )
-      }
-      return <span key={index}>{paragraph}</span>
-    })
-    return <Typography variant="body2">{withBreaks}</Typography>
-  }
-  return (
-    <Box sx={{maxWidth: "20rem"}}>
-      <Card variant="outlined">
-        <CardActionArea onClick={onClick}>
-          <CardHeader title={title} />
-          <CardContent>{renderContent()}</CardContent>
-        </CardActionArea>
-      </Card>
-    </Box>
-  )
-}
 
 type TranslationSettings = {
   table: boolean

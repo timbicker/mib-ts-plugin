@@ -33,6 +33,7 @@
     "@fluentui/react": "^8.52.3",
     "@mui/icons-material": "^5.14.14",
     "@mui/material": "^5.14.14",
+    "@paddle/paddle-js": "^0.5.5",
     "core-js": "^3.9.1",
     "es6-promise": "^4.2.8",
     "moment": "^2.29.4",
@@ -93,5 +94,6 @@
   },
   "browserslist": [
     "ie 11"
-  ]
+  ],
+  "packageManager": "yarn@4.1.0"
 }
