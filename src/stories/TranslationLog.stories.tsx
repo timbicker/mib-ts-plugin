@@ -1,6 +1,5 @@
 import React from "react"
 import type {Meta, StoryObj} from "@storybook/react"
-
 import {TranslationLog, TranslationLogProps} from "../taskpane/components/TranslationLog"
 import {TranslationLogMessages} from "../taskpane/state/translationLog"
 import {DummyAppSceleton, DummyWordPage, DummyWordSceleton} from "./DummyAppSceleton"

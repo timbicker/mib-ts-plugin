@@ -10,17 +10,36 @@ import {
 
 const AppStateContext = createContext<FormPageState | null>(null)
 
-type PagePath = "new" | "update" | "settings" | "settings/about" | "settings/plan"
+type PagePath =
+  | "new"
+  | "update"
+  | "settings"
+  | "settings/about"
+  | "settings/my-plan"
+  | "settings/choose-plan"
+  | "settings/token-status"
+  | "settings/contact"
 
 export const pageNames: Record<PagePath, string> = {
   new: "New Translation",
   update: "Update Translation",
   settings: "Settings",
-  "settings/about": "About Make it Bilingual",
-  "settings/plan": "My Plan",
+  "settings/about": "About Us",
+  "settings/my-plan": "My Plan",
+  "settings/choose-plan": "Choose Plan",
+  "settings/token-status": "Token Status",
+  "settings/contact": "Contact Us",
 }
 
-export type Page = "new" | "update" | "settings" | "settings/about" | "settings/plan"
+export type Page =
+  | "new"
+  | "update"
+  | "settings"
+  | "settings/about"
+  | "settings/my-plan"
+  | "settings/choose-plan"
+  | "settings/token-status"
+  | "settings/contact"
 
 function useTranslationLog() {
   const [_log, setLog] = useState<TranslationLogMessages>([])

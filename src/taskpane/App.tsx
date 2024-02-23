@@ -1,14 +1,14 @@
 import React from "react"
-import Progress from "./Progress"
+import Progress from "./components/Progress"
 import {ThemeProvider} from "@emotion/react"
 import Logo from "@assets/logo-filled.png"
-import {AppStateProvider, useAppState, useAppStateProvider} from "../state/state"
-import {NewPage} from "./menu-pages/NewPage"
-import {UpdatePage} from "./menu-pages/UpdatePage"
-import {SettingsPage} from "./menu-pages/SettingsPage"
-import {TopBarLoader} from "./NavigationMenu"
+import {AppStateProvider, useAppState, useAppStateProvider} from "./state/state"
+import {NewTranslationPage} from "./pages/menu-pages/NewTranslationPage"
+import {UpdatePage} from "./pages/menu-pages/UpdatePage"
+import {SettingsPageLoader} from "./pages/settings-pages/SettingsPage"
+import {TopBarLoader} from "./components/NavigationMenu"
 import Box from "@mui/material/Box"
-import {theme} from "./theme"
+import {theme} from "./components/theme"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* global Word, require */
@@ -21,10 +21,10 @@ export interface AppProps {
 function Pages() {
   const {page} = useAppState()
 
-  if (page.startsWith("new")) return <NewPage />
+  if (page.startsWith("new")) return <NewTranslationPage />
   if (page.startsWith("update")) return <UpdatePage />
-  if (page.startsWith("settings")) return <SettingsPage />
-  return <NewPage />
+  if (page.startsWith("settings")) return <SettingsPageLoader />
+  return <NewTranslationPage />
 }
 
 const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {

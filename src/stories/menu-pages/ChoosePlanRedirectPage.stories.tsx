@@ -1,39 +1,24 @@
-import {DummyWordSceleton} from "../DummyAppSceleton"
-import {ThemeProvider} from "@emotion/react"
-import {theme} from "../../taskpane/components/theme"
-import Box from "@mui/material/Box"
-import {TopBar} from "../../taskpane/components/NavigationMenu"
-import {ChoosePlanPageRedirectInner} from "../../taskpane/components/menu-pages/ChoosePlanPage"
 import React from "react"
 import type {Meta, StoryObj} from "@storybook/react"
 
+import {ChoosePlanRedirectPage} from "../../taskpane/pages/menu-pages/ChoosePlanRedirectPage"
+import {decorators} from "../decorators"
+
 const meta = {
-  title: "Menu Pages/Choose Plan Redirect Page",
-  // component: StoryPage,
+  title: "Menu Pages/Choose Plan Redirect",
   parameters: {
     layout: "fullscreen",
   },
-} satisfies Meta<typeof ChoosePlanPageRedirectInner>
+  args: {
+    page: "new",
+  },
+  decorators: [decorators.menuPage],
+} satisfies Meta<typeof ChoosePlanRedirectPage>
 export default meta
 
-type Story = StoryObj<typeof ChoosePlanPageRedirectInner>
+type Story = StoryObj<typeof ChoosePlanRedirectPage>
 
-export function ChoosePlanRedirectPage() {
-  return (
-    <DummyWordSceleton>
-      <ThemeProvider theme={theme}>
-        <Box
-          sx={{
-            position: "relative",
-          }}
-        >
-          <TopBar
-            page={"new"}
-            setPage={() => null}
-          />
-          <ChoosePlanPageRedirectInner />
-        </Box>
-      </ThemeProvider>
-    </DummyWordSceleton>
-  )
+export const ChoosePlanRedirect: Story = {
+  name: "Choose Plan Redirect",
+  render: ChoosePlanRedirectPage,
 }

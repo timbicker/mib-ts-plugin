@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from "@storybook/react"
-import {LoginPageInner} from "../../taskpane/components/full-pages/LoginPage"
 import {DummyWordSceleton} from "../DummyAppSceleton"
 import React from "react"
+import {LoginPageInner} from "../../taskpane/pages/public-pages/LoginPage"
 
 export function LoginPage() {
   return (

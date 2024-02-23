@@ -3,7 +3,7 @@ import {initializeIcons} from "@fluentui/font-icons-mdl2"
 import {ThemeProvider} from "@fluentui/react"
 import * as React from "react"
 import * as ReactDOM from "react-dom"
-import App from "./components/App"
+import App from "./App"
 
 // eslint-disable-next-line no-redeclare
 /* global document, Office, module, require */

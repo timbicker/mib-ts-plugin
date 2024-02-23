@@ -1,4 +1,7 @@
+import React from "react"
 import type {Preview} from "@storybook/react"
+import {theme} from "../src/taskpane/components/theme"
+import {ThemeProvider} from "@emotion/react"
 
 const preview: Preview = {
   parameters: {
@@ -10,6 +13,13 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    Story => (
+      <ThemeProvider theme={theme}>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 }
 
 export default preview

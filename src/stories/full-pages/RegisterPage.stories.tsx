@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from "@storybook/react"
 import {DummyWordSceleton} from "../DummyAppSceleton"
 import React from "react"
-import {RegisterPageInner} from "../../taskpane/components/full-pages/RegisterPage"
+import {RegisterPageInner} from "../../taskpane/pages/public-pages/RegisterPage"
 
 export function RegisterPage() {
   return (

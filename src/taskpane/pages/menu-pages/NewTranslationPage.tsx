@@ -4,12 +4,12 @@ import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
 import {Button, CardActionArea, Link} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
-import {LanguageSelect} from "../LanguageSelect"
-import {ExplanationStep} from "../ExplanationStep"
+import {LanguageSelect} from "../../components/LanguageSelect"
+import {ExplanationStep} from "../../components/ExplanationStep"
 import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
-import {TranslateLogProvider} from "../TranslationLog"
-import {TranslationPaper} from "../TranslationPaper"
+import {TranslateLogProvider} from "../../components/TranslationLog"
+import {TranslationPaper} from "../../components/TranslationPaper"
 import {extendOneColumnTable} from "../../state/translate/translate"
 
 type TranslationSettings = {
@@ -50,7 +50,7 @@ function TranslationSettings({
   )
 }
 
-export function NewPage() {
+export function NewTranslationPage() {
   const {isTranslating, createTranslationFromStandard} = useAppState()
   const [settings, setSettings] = useState({table: false})
   if (isTranslating !== "idle") {
