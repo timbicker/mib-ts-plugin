@@ -5,7 +5,7 @@ import {useAppState} from "../state/state"
 import {ListMessage, LogMessage, TableMessage, TranslationLogMessages} from "../state/translationLog"
 import Typography from "@mui/material/Typography"
 import {Alert, AlertTitle, Button, Divider, Link} from "@mui/material"
-import {jumpToList, jumpToTable} from "../state/translate/jumpToElement"
+import {jumpToList, jumpToTable} from "../translate/jumpToElement"
 import {PageContainer} from "./PageContainer"
 
 function LinearProgressWithLabel(props: LinearProgressProps & {value: number}) {
@@ -217,13 +217,13 @@ export function TranslationLog({translationProgress, logMessages, resetTranslati
 }
 
 export function TranslateLogProvider() {
-  const {log, resetTranslation} = useAppState()
+  const {translation} = useAppState()
 
   return (
     <TranslationLog
-      translationProgress={log.translationProgress}
-      logMessages={log.log}
-      resetTranslation={resetTranslation}
+      translationProgress={translation.log.translationProgress}
+      logMessages={translation.log.log}
+      resetTranslation={translation.resetTranslation}
     />
   )
 }

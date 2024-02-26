@@ -1,4 +1,4 @@
-import {getLog} from "../translationLog"
+import {getLog} from "../state/translationLog"
 
 export function updateParagraph(
   newParagraph: Word.Paragraph,

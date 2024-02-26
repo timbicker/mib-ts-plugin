@@ -2,8 +2,9 @@ import {Stack} from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import React from "react"
+import {useAppState} from "../../state/state"
 
-export function ChoosePlanRedirectPage() {
+export function ChoosePlanRedirectPage({onClick}: {onClick: () => void}) {
   return (
     <Stack
       direction={"column"}
@@ -18,9 +19,15 @@ export function ChoosePlanRedirectPage() {
       <Button
         variant={"contained"}
         sx={{alignSelf: "stretch"}}
+        onClick={onClick}
       >
         Book a plan
       </Button>
     </Stack>
   )
+}
+
+export function ChoosePlanRedirectPageLoader() {
+  const {setPage} = useAppState()
+  return <ChoosePlanRedirectPage onClick={() => setPage("settings/choose-plan")} />
 }

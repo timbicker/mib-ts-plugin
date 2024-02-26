@@ -1,17 +1,15 @@
 import * as React from "react"
-import Avatar from "@mui/material/Avatar"
 import Button from "@mui/material/Button"
-import CssBaseline from "@mui/material/CssBaseline"
 import TextField from "@mui/material/TextField"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Checkbox from "@mui/material/Checkbox"
 import Link from "@mui/material/Link"
 import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import Typography from "@mui/material/Typography"
 import Container from "@mui/material/Container"
 import {MIBLogo} from "../../components/MIBLogo"
+import {useAuth} from "../../state/auth"
 
 function Copyright(props: any) {
   return (
@@ -34,14 +32,21 @@ function Copyright(props: any) {
   )
 }
 
-export function LoginPageInner() {
+export function LoginPageInner({
+  setAuthPage,
+  login,
+}: {
+  login: (user: string, password: string) => Promise<void>
+  setAuthPage: (page: "login" | "register" | "forgot-password") => void
+}) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    })
+    login(data.get("email") as string, data.get("password") as string)
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // })
   }
 
   return (
@@ -111,6 +116,7 @@ export function LoginPageInner() {
             fullWidth
             variant={"outlined"}
             sx={{mt: 1, mb: 2}}
+            onClick={() => setAuthPage("register")}
           >
             Register
           </Button>
@@ -119,25 +125,32 @@ export function LoginPageInner() {
               item
               xs
             >
-              <Link
-                href="#"
-                variant="body2"
+              <Button
+                onClick={() => setAuthPage("forgot-password")}
+                variant="text"
               >
                 Forgot password?
-              </Link>
+              </Button>
             </Grid>
-            <Grid item>
-              {/*<Link*/}
-              {/*  href="#"*/}
-              {/*  variant="body2"*/}
-              {/*>*/}
-              {/*  {"Don't have an account? Sign Up"}*/}
-              {/*</Link>*/}
-            </Grid>
+            <Grid item></Grid>
           </Grid>
         </Box>
       </Box>
       <Copyright sx={{mt: 8, mb: 4}} />
     </Container>
+  )
+}
+
+export function LoginPageLoader({
+  setAuthPage,
+}: {
+  setAuthPage: (page: "login" | "register" | "forgot-password") => void
+}) {
+  const {logIn} = useAuth()
+  return (
+    <LoginPageInner
+      setAuthPage={setAuthPage}
+      login={logIn}
+    />
   )
 }

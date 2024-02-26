@@ -1,5 +1,5 @@
 import {ListManager, updateParagraph} from "./utils"
-import {getLog} from "../translationLog"
+import {getLog} from "../state/translationLog"
 
 type SortedParagraphs =
   | {

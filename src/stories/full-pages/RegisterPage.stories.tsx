@@ -6,7 +6,10 @@ import {RegisterPageInner} from "../../taskpane/pages/public-pages/RegisterPage"
 export function RegisterPage() {
   return (
     <DummyWordSceleton>
-      <RegisterPageInner />
+      <RegisterPageInner
+        setAuthPage={() => null}
+        register={() => null}
+      />
     </DummyWordSceleton>
   )
 }

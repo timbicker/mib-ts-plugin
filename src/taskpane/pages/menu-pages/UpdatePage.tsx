@@ -4,15 +4,17 @@ import {LanguageSelect} from "../../components/LanguageSelect"
 import {Button} from "@mui/material"
 import TranslateIcon from "@mui/icons-material/Translate"
 import {ExplanationStep} from "../../components/ExplanationStep"
-import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
 import {TranslateLogProvider} from "../../components/TranslationLog"
 import {TranslationPaper} from "../../components/TranslationPaper"
 import Box from "@mui/material/Box"
-import {updateTranslation} from "../../state/translate/translate"
+import {updateTranslation} from "../../translate/translate"
+import {useAuth} from "../../state/auth"
+import {ChoosePlanRedirectPage, ChoosePlanRedirectPageLoader} from "./ChoosePlanRedirectPage"
 
 export function UpdatePage() {
-  const {isTranslating, createTranslationFromStandard} = useAppState()
+  const {translation} = useAppState()
+  const {isTranslating, createTranslationFromStandard} = translation
   if (isTranslating === "translating") {
     return <TranslateLogProvider />
   }
@@ -60,4 +62,10 @@ export function UpdatePage() {
       </Button>
     </Stack>
   )
+}
+
+export function UpdateTranslationPageLoader() {
+  const {plan} = useAuth()
+  if (!plan) return <ChoosePlanRedirectPageLoader />
+  return <UpdatePage />
 }

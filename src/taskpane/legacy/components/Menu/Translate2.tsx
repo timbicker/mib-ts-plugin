@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography"
 import LanguageSelect from "../LanguageSelect"
 import {AddSprachklausel} from "../AddSprachKlausel"
 import React from "react"
-import {createTranslation, extendOneColumnTable} from "../../../state/translate/translate"
+import {createTranslation, extendOneColumnTable} from "../../../translate/translate"
 
 export function Translate2({
   variant,

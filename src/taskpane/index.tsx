@@ -35,8 +35,8 @@ Office.onReady(() => {
 })
 
 if ((module as any).hot) {
-  ;(module as any).hot.accept("./components/App", () => {
-    const NextApp = require("./legacy/LegacyApp").default
+  ;(module as any).hot.accept("./App", () => {
+    const NextApp = require("./App").default
     render(NextApp)
   })
 }

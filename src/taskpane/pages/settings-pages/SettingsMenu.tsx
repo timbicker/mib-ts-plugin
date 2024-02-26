@@ -1,9 +1,10 @@
-import {Page, useAppState} from "../../state/state"
+import {useAppState} from "../../state/state"
 import Button from "@mui/material/Button"
 import Stack from "@mui/material/Stack"
 import {Box} from "@mui/system"
 import {Divider} from "@mui/material"
 import React from "react"
+import {Page} from "../../state/usePage"
 
 export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => void; activePlan?: boolean}) {
   function renderMisc() {

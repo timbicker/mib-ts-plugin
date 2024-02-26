@@ -3,6 +3,7 @@ import type {Meta, StoryObj} from "@storybook/react"
 
 import {ChoosePlanRedirectPage} from "../../taskpane/pages/menu-pages/ChoosePlanRedirectPage"
 import {decorators} from "../decorators"
+import {Page} from "../../taskpane/state/usePage"
 
 const meta = {
   title: "Menu Pages/Choose Plan Redirect",
@@ -11,9 +12,10 @@ const meta = {
   },
   args: {
     page: "new",
+    onClick: () => {},
   },
   decorators: [decorators.menuPage],
-} satisfies Meta<typeof ChoosePlanRedirectPage>
+} satisfies Meta<typeof ChoosePlanRedirectPage> & {args: {page: Page}}
 export default meta
 
 type Story = StoryObj<typeof ChoosePlanRedirectPage>

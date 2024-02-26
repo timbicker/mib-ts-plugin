@@ -6,7 +6,8 @@ import {countries, Country} from "./languages"
 import {useAppState} from "../state/state"
 
 export function LanguageSelect() {
-  const {language, setLanguage} = useAppState()
+  const {translation} = useAppState()
+  const {language, setLanguage} = translation
   return (
     <Autocomplete
       value={language}

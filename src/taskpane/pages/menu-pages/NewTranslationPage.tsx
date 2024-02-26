@@ -10,7 +10,9 @@ import Typography from "@mui/material/Typography"
 import {useAppState} from "../../state/state"
 import {TranslateLogProvider} from "../../components/TranslationLog"
 import {TranslationPaper} from "../../components/TranslationPaper"
-import {extendOneColumnTable} from "../../state/translate/translate"
+import {extendOneColumnTable} from "../../translate/translate"
+import {useAuth} from "../../state/auth"
+import {ChoosePlanRedirectPage, ChoosePlanRedirectPageLoader} from "./ChoosePlanRedirectPage"
 
 type TranslationSettings = {
   table: boolean
@@ -51,7 +53,8 @@ function TranslationSettings({
 }
 
 export function NewTranslationPage() {
-  const {isTranslating, createTranslationFromStandard} = useAppState()
+  const {translation} = useAppState()
+  const {isTranslating, createTranslationFromStandard} = translation
   const [settings, setSettings] = useState({table: false})
   if (isTranslating !== "idle") {
     return <TranslateLogProvider />
@@ -106,4 +109,10 @@ export function NewTranslationPage() {
       </Button>
     </Stack>
   )
+}
+
+export function NewTranslationPageLoader() {
+  const {plan} = useAuth()
+  if (!plan) return <ChoosePlanRedirectPageLoader />
+  return <NewTranslationPage />
 }

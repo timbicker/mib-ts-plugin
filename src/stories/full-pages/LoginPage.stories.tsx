@@ -6,7 +6,10 @@ import {LoginPageInner} from "../../taskpane/pages/public-pages/LoginPage"
 export function LoginPage() {
   return (
     <DummyWordSceleton>
-      <LoginPageInner />
+      <LoginPageInner
+        setAuthPage={() => null}
+        login={() => null}
+      />
     </DummyWordSceleton>
   )
 }

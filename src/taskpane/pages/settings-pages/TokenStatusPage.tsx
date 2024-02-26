@@ -20,3 +20,11 @@ export function TokenStatusPage({tokenStatusProps}: {tokenStatusProps: TokenStat
     </Box>
   )
 }
+
+export function TokenStatusPageLoader() {
+  return (
+    <TokenStatusPage
+      tokenStatusProps={{variant: "warning", translatedCharacters: 100000, charactersLeft: 1000}}
+    />
+  )
+}

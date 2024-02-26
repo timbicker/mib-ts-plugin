@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
 import OutlinedInput from "@mui/material/OutlinedInput"
 import InputLabel from "@mui/material/InputLabel"
 import InputAdornment from "@mui/material/InputAdornment"
@@ -14,6 +13,7 @@ import FormControl from "@mui/material/FormControl"
 import Visibility from "@mui/icons-material/Visibility"
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
 import IconButton from "@mui/material/IconButton"
+import {useAuth} from "../../state/auth"
 
 function PasswordInput({id, label}: {id: string; label: string}) {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -52,7 +52,23 @@ function PasswordInput({id, label}: {id: string; label: string}) {
   )
 }
 
-export function RegisterPageInner() {
+export function RegisterPageInner({
+  setAuthPage,
+  register,
+}: {
+  setAuthPage: (page: "login" | "register" | "forgot-password") => void
+  register: (email: string, password: string) => Promise<void>
+}) {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    register(data.get("email1") as string, data.get("password1") as string)
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // })
+  }
+
   return (
     <Container
       component="main"
@@ -75,7 +91,7 @@ export function RegisterPageInner() {
         </Typography>
         <Box
           component="form"
-          // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           noValidate
           sx={{mt: 1}}
         >
@@ -117,24 +133,30 @@ export function RegisterPageInner() {
               item
               xs
             >
-              <Link
-                href="#"
-                variant="body2"
+              <Button
+                onClick={() => setAuthPage("login")}
+                variant="text"
               >
                 Go back to log in
-              </Link>
-            </Grid>
-            <Grid item>
-              {/*<Link*/}
-              {/*  href="#"*/}
-              {/*  variant="body2"*/}
-              {/*>*/}
-              {/*  {"Don't have an account? Sign Up"}*/}
-              {/*</Link>*/}
+              </Button>
             </Grid>
           </Grid>
         </Box>
       </Box>
     </Container>
+  )
+}
+
+export function RegisterPageLoader({
+  setAuthPage,
+}: {
+  setAuthPage: (page: "login" | "register" | "forgot-password") => void
+}) {
+  const {register} = useAuth()
+  return (
+    <RegisterPageInner
+      register={register}
+      setAuthPage={setAuthPage}
+    />
   )
 }

@@ -1,4 +1,4 @@
-import {Page, useAppState} from "../state/state"
+import {useAppState} from "../state/state"
 import React, {ReactNode} from "react"
 import Box from "@mui/material/Box"
 import {MIBLogo} from "./MIBLogo"
@@ -8,6 +8,7 @@ import SettingsIcon from "@mui/icons-material/Settings"
 import {Divider} from "@mui/material"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
+import {Page} from "../state/usePage"
 
 export function TopBarWithoutTabs({children}: {children?: ReactNode}) {
   return (

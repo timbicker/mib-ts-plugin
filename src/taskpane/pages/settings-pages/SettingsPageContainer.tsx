@@ -2,10 +2,8 @@ import React, {ReactNode} from "react"
 import Stack from "@mui/material/Stack"
 import {Box} from "@mui/system"
 import Typography from "@mui/material/Typography"
-import {Page, pageNames, useAppState} from "../../state/state"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
-import {AboutPage} from "./About"
-import {SettingsMenuLoader} from "./SettingsMenu"
+import {Page, pageNames} from "../../state/usePage"
 
 function SettingsBreadCrumbs({
   page,
@@ -73,11 +71,6 @@ function SettingsBreadCrumbs({
   )
 }
 
-function chooseSettingsPage(page: string) {
-  if (page === "settings/about") return <AboutPage />
-  return <SettingsMenuLoader />
-}
-
 export function SettingsPageContainer({
   page,
   setPage,
@@ -102,17 +95,5 @@ export function SettingsPageContainer({
       />
       {children}
     </Stack>
-  )
-}
-
-export function SettingsPageLoader() {
-  const {page, setPage} = useAppState()
-  return (
-    <SettingsPageContainer
-      page={page}
-      setPage={setPage}
-    >
-      {chooseSettingsPage(page)}
-    </SettingsPageContainer>
   )
 }
