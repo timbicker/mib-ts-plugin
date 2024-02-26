@@ -1,3 +1,4 @@
+import "./firebase"
 import {AppContainer} from "react-hot-loader"
 import {initializeIcons} from "@fluentui/font-icons-mdl2"
 import {ThemeProvider} from "@fluentui/react"
@@ -12,7 +13,7 @@ initializeIcons()
 
 let isOfficeInitialized = false
 
-const title = "Contoso Task Pane Add-in"
+const title = "Make it Bilingual"
 
 const render = Component => {
   ReactDOM.render(

@@ -5,6 +5,7 @@ import {Box} from "@mui/system"
 import {Divider} from "@mui/material"
 import React from "react"
 import {Page} from "../../state/usePage"
+import {useAuth} from "../../state/auth"
 
 export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => void; activePlan?: boolean}) {
   function renderMisc() {
@@ -19,7 +20,7 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
         </Button>
         <Button
           variant={"outlined"}
-          onClick={() => setPage("settings/about")}
+          onClick={() => setPage("settings/contact")}
           fullWidth
         >
           Contact Us
@@ -30,6 +31,13 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
           fullWidth
         >
           About Us
+        </Button>
+        <Button
+          variant={"outlined"}
+          onClick={() => setPage("settings/about")}
+          fullWidth
+        >
+          Log out
         </Button>
       </>
     )
@@ -53,6 +61,7 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
             variant={"contained"}
             fullWidth
             sx={{mt: 2}}
+            onClick={() => setPage("settings/choose-plan")}
           >
             Book a plan
           </Button>
@@ -74,12 +83,14 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
         <Button
           variant={"outlined"}
           fullWidth
+          onClick={() => setPage("settings/token-status")}
         >
           Token Status
         </Button>
         <Button
           variant={"outlined"}
           fullWidth
+          onClick={() => setPage("settings/my-plan")}
         >
           My Plan
         </Button>
@@ -91,5 +102,11 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
 
 export function SettingsMenuLoader() {
   const {setPage} = useAppState()
-  return <SettingsMenu setPage={setPage} />
+  const {plan} = useAuth()
+  return (
+    <SettingsMenu
+      setPage={setPage}
+      activePlan={plan}
+    />
+  )
 }

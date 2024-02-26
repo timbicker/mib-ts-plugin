@@ -12,7 +12,7 @@ import {TranslateLogProvider} from "../../components/TranslationLog"
 import {TranslationPaper} from "../../components/TranslationPaper"
 import {extendOneColumnTable} from "../../translate/translate"
 import {useAuth} from "../../state/auth"
-import {ChoosePlanRedirectPage, ChoosePlanRedirectPageLoader} from "./ChoosePlanRedirectPage"
+import {ChoosePlanRedirectPageLoader} from "./ChoosePlanRedirectPage"
 
 type TranslationSettings = {
   table: boolean

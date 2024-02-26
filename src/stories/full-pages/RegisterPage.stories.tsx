@@ -8,7 +8,7 @@ export function RegisterPage() {
     <DummyWordSceleton>
       <RegisterPageInner
         setAuthPage={() => null}
-        register={() => null}
+        handleRegister={() => null}
       />
     </DummyWordSceleton>
   )

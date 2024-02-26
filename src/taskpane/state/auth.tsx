@@ -1,5 +1,11 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {useState} from "react"
+import {getAuth, onAuthStateChanged} from "firebase/auth"
+import firebase from "firebase/compat"
+import User = firebase.User
+import {api} from "./api"
+
+const firebaseAuth = getAuth()
 
 type AuthState = {type: "loading"} | {type: "unauthenticated"} | {type: "authenticated"}
 
@@ -9,31 +15,48 @@ async function fakeLogin(): Promise<void> {
 
 function useAuthProvider() {
   const [auth, setAuth] = useState<AuthState>({type: "unauthenticated"})
-  const [plan, setPlan] = useState<boolean>(false)
+  const [plan, setPlan] = useState<boolean>(true)
+
+  useEffect(function observeAuthChange() {
+    function handleAuthStateChanged(user: User) {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid
+        setAuth({type: "authenticated"})
+      } else {
+        // User is signed out
+        setAuth({type: "unauthenticated"})
+      }
+    }
+    onAuthStateChanged(firebaseAuth, handleAuthStateChanged)
+  }, [])
 
   async function logIn(email: string, password: string) {
-    console.log(email + password)
     setAuth({type: "loading"})
     try {
-      await fakeLogin()
-      setAuth({type: "authenticated"})
+      await api.logIn(email, password)
+      // success is handled in auth observer
     } catch (e) {
       setAuth({type: "unauthenticated"})
     }
   }
 
   async function register(email: string, password: string) {
-    console.log(email + password)
     setAuth({type: "loading"})
     try {
-      await fakeLogin()
-      setAuth({type: "authenticated"})
+      await api.register(email, password)
+      // success is handled in auth observer
     } catch (e) {
       setAuth({type: "unauthenticated"})
     }
   }
 
-  return {auth, logIn, plan, register}
+  function logOut() {
+    firebaseAuth.signOut()
+  }
+
+  return {auth, logIn, logOut, plan, register}
 }
 
 const AuthContext = React.createContext<ReturnType<typeof useAuthProvider>>(null)
