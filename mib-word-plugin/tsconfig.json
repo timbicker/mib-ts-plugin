@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "jsx": "react",
     "module": "CommonJS",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noImplicitReturns": true,
     "noUnusedParameters": true,
     "outDir": "dist",
