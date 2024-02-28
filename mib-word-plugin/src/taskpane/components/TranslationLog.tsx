@@ -2,7 +2,12 @@ import React, {ReactElement} from "react"
 import Box from "@mui/material/Box"
 import LinearProgress, {LinearProgressProps} from "@mui/material/LinearProgress"
 import {useAppState} from "../state/state"
-import {ListMessage, LogMessage, TableMessage, TranslationLogMessages} from "../state/translationLog"
+import {
+  type ListMessage,
+  LogMessage,
+  type TableMessage,
+  TranslationLogMessages,
+} from "../state/translationLog"
 import Typography from "@mui/material/Typography"
 import {Alert, AlertTitle, Button, Divider, Link} from "@mui/material"
 import {jumpToList, jumpToTable} from "../translate/jumpToElement"

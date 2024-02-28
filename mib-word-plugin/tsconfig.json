@@ -5,8 +5,8 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "module": "CommonJS",
-    "moduleResolution": "bundler",
+    "module": "es2015",
+    "moduleResolution": "node",
     "noImplicitReturns": true,
     "noUnusedParameters": true,
     "outDir": "dist",
@@ -18,9 +18,6 @@
       "dom"
     ],
     "pretty": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "paths": {
       "@assets/*": [
         "./assets/*"

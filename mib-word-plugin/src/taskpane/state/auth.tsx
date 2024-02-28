@@ -1,8 +1,6 @@
-import React, {useEffect} from "react"
+import React, {PropsWithChildren, useEffect} from "react"
 import {useState} from "react"
-import {getAuth, onAuthStateChanged} from "firebase/auth"
-import firebase from "firebase/compat"
-import User = firebase.User
+import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 import {api} from "./api"
 
 const firebaseAuth = getAuth()
@@ -61,7 +59,7 @@ function useAuthProvider() {
 
 const AuthContext = React.createContext<ReturnType<typeof useAuthProvider>>(null)
 
-export const AuthProvider: React.FC = ({children}) => {
+export const AuthProvider = ({children}: PropsWithChildren) => {
   const auth = useAuthProvider()
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
 }

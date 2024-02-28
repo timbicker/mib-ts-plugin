@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
 const path = require("path")
 
+const isDevelopment = process.env.NODE_ENV !== "production"
+
 const urlDev = "https://localhost:3000/"
 const urlProd = "https://www.contoso.com/" // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
 
@@ -17,11 +19,12 @@ async function getHttpsOptions() {
 module.exports = async (env, options) => {
   const dev = options.mode === "development"
   const config = {
+    mode: isDevelopment,
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
+      vendor: ["react", "react-dom", "core-js"],
+      taskpane: ["./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -41,14 +44,14 @@ module.exports = async (env, options) => {
           use: {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/preset-typescript"],
+              presets: ["@babel/preset-env"],
             },
           },
         },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
+          use: ["ts-loader"],
         },
         {
           test: /\.html$/,
@@ -87,7 +90,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
-        chunks: ["taskpane", "vendor", "polyfills"],
+        chunks: ["polyfill", "vendor", "taskpane"],
       }),
       new HtmlWebpackPlugin({
         filename: "commands.html",
@@ -102,9 +105,6 @@ module.exports = async (env, options) => {
       hot: true,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "private, no-cache, no-store",
-        Pragma: "no-cache",
-        Expires: "-1",
       },
       server: {
         type: "https",

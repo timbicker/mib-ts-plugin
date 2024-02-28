@@ -22,10 +22,7 @@ import {SettingsMenuLoader} from "./pages/settings-pages/SettingsMenu"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* global Word, require */
 
-export interface AppProps {
-  title: string
-  isOfficeInitialized: boolean
-}
+export interface AppProps {}
 
 function chooseSettingsPage(page: SettingsPage) {
   if (page === "settings") return <SettingsMenuLoader />
@@ -93,17 +90,7 @@ function PrivateApp() {
   )
 }
 
-const App: React.FC<AppProps> = ({title, isOfficeInitialized}) => {
-  if (!isOfficeInitialized) {
-    return (
-      <Progress
-        title={title}
-        logo={Logo}
-        message="Please sideload your addin to see app body."
-      />
-    )
-  }
-
+const App: React.FC<AppProps> = () => {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
