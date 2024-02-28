@@ -12,5 +12,8 @@
   "scripts": {
     "mib": "yarn workspace mib-word-plugin",
     "mib:payment": "yarn workspace mib-payment-site"
+  },
+  "engines": {
+    "node": "18"
   }
 }
