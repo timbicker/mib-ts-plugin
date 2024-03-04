@@ -4,6 +4,7 @@ import {initializePaddle, Paddle} from "@paddle/paddle-js"
 import {DummyAppSceleton, DummyWordPage, DummyWordSceleton} from "./DummyAppSceleton"
 import Box from "@mui/material/Box"
 import {Button} from "@mui/material"
+import {Product} from "@shared/types"
 
 const productId = "pro_01hnne6s5448kq8mz1ft43zk60"
 
@@ -12,6 +13,13 @@ const yearlyStarterPriceId = "pri_01hnne8qp5a1nj0nptsgx6d1g2"
 
 const monthlyAdvancedPriceId = "pri_01hnwtcnxnvqfd7w8hmrc2b7et"
 const yearlyAdvancedPriceId = "pri_01hnwtdj8af0x13mtmf0mq3cze"
+
+const items: Record<Product, string> = {
+  "monthly-starter": monthlyStarterPriceId,
+  "monthly-advanced": monthlyAdvancedPriceId,
+  "yearly-starter": yearlyStarterPriceId,
+  "yearly-advanced": yearlyAdvancedPriceId,
+}
 
 const monthItems = [
   {

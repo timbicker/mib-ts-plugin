@@ -22,6 +22,7 @@
       "@assets/*": [
         "./assets/*"
       ],
+      "@shared/*": ["../mib-shared/*"]
     }
   },
   "exclude": [
