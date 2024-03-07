@@ -1,7 +1,7 @@
 import {useAppState} from "../state/state"
 import React, {ReactNode} from "react"
 import Box from "@mui/material/Box"
-import {MIBLogo} from "./MIBLogo"
+import {MIBLogo} from "@shared/MIBLogo"
 import TranslateIcon from "@mui/icons-material/Translate"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import SettingsIcon from "@mui/icons-material/Settings"

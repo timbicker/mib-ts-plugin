@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import Container from "@mui/material/Container"
 import Box from "@mui/material/Box"
-import {MIBLogo} from "../../components/MIBLogo"
+import {MIBLogo} from "@shared/MIBLogo"
 import Typography from "@mui/material/Typography"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"

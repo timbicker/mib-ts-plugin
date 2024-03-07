@@ -1,10 +1,15 @@
 import {Box} from "@mui/system"
-import logo from "@assets/icon-64.png"
+import logoGrey from "./logo-images/icon-64.png"
+import logoWhite from "./logo-images/logo-filled_white.png"
 import Typography from "@mui/material/Typography"
 import React from "react"
 import {SxProps} from "@mui/material"
 
-export function MIBLogo({sx}: {sx?: SxProps}) {
+export function MIBLogo({sx, color = "standard"}: {sx?: SxProps; color?: "white" | "standard"}) {
+  function logo() {
+    if (color === "white") return logoWhite.src
+    return logoGrey.src
+  }
   return (
     <Box
       sx={{
@@ -25,9 +30,14 @@ export function MIBLogo({sx}: {sx?: SxProps}) {
           width: 24,
         }}
         alt="Logo."
-        src={logo}
+        src={logo()}
       />
-      <Typography sx={{fontSize: 20, fontWeight: 400}}>Make It Bilingual!</Typography>
+      <Typography
+        sx={{fontSize: 20, fontWeight: 400}}
+        color={color === "white" ? "white" : "primary"}
+      >
+        Make It Bilingual!
+      </Typography>
     </Box>
   )
 }
