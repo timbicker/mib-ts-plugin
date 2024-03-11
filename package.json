@@ -8,7 +8,8 @@
   "workspaces": [
     "mib-payment-site",
     "mib-word-plugin",
-    "mib-shared"
+    "mib-shared",
+    "mib-functions"
   ],
   "scripts": {
     "mib": "yarn workspace mib-word-plugin",
