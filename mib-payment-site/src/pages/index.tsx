@@ -1,5 +1,5 @@
 import Head from "next/head"
-import {PaddleModal} from "@/PaymentSite"
+import {PaymentSiteContainer} from "@/PaymentSite"
 
 export default function Home() {
   return (
@@ -20,7 +20,7 @@ export default function Home() {
         />
       </Head>
       <main>
-        <PaddleModal />
+        <PaymentSiteContainer />
       </main>
     </>
   )

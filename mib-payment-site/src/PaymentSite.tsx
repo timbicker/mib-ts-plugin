@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from "react"
 import Box from "@mui/material/Box"
-import {usePaddle} from "@/usePaddle"
+import {PaddleState, usePaddle, UsePaddleResponse} from "@/usePaddle"
 import Button from "@mui/material/Button"
-import {Divider, Typography, useTheme} from "@mui/material"
+import {Divider, Link, Typography, useTheme} from "@mui/material"
 import {MIBLogo} from "@shared/MIBLogo"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Checkbox from "@mui/material/Checkbox"
 import {MuiPrice} from "@shared/MuiPrice"
+import {priceInfos} from "@shared/paddle/types"
 
 function BillingPeriodButtons({
   onMonthly,
   onYearly,
-  state,
+  billingCycle,
 }: {
   onMonthly: () => void
   onYearly: () => void
-  state: "monthly" | "yearly"
+  billingCycle: "monthly" | "yearly"
 }) {
   const theme = useTheme()
   function buttonStyles(active: boolean) {
@@ -40,7 +41,7 @@ function BillingPeriodButtons({
   }
 
   function handleCheckboxClick() {
-    if (state === "yearly") {
+    if (billingCycle === "yearly") {
       onMonthly()
     }
     onYearly()
@@ -59,7 +60,7 @@ function BillingPeriodButtons({
       <Button
         variant={"outlined"}
         size={"small"}
-        sx={buttonStyles(state === "monthly")}
+        sx={buttonStyles(billingCycle === "monthly")}
         onClick={onMonthly}
       >
         Monthly
@@ -75,7 +76,7 @@ function BillingPeriodButtons({
         size={"small"}
         onClick={onYearly}
         sx={{
-          ...buttonStyles(state === "yearly"),
+          ...buttonStyles(billingCycle === "yearly"),
           // ml: 2,
         }}
       >
@@ -83,7 +84,7 @@ function BillingPeriodButtons({
       </Button>
       <FormControlLabel
         sx={{
-          color: state === "monthly" ? "grey" : theme.palette.success.main,
+          color: billingCycle === "monthly" ? "grey" : theme.palette.success.main,
           ml: 1,
         }}
         componentsProps={{
@@ -95,8 +96,8 @@ function BillingPeriodButtons({
         control={
           <Checkbox
             sx={{color: "inherit", p: 0}}
-            checked={state === "yearly"}
-            color={state === "monthly" ? "error" : "success"}
+            checked={billingCycle === "yearly"}
+            color={billingCycle === "monthly" ? "error" : "success"}
             disableRipple
             // onClick={handleCheckboxClick}
             onChange={handleCheckboxClick}
@@ -108,7 +109,76 @@ function BillingPeriodButtons({
   )
 }
 
-export function PaddleModal() {
+function PaymentSiteInner({
+  paddleState,
+  openCheckout,
+}: {
+  paddleState: Extract<PaddleState, {type: "loaded"}>
+  openCheckout: UsePaddleResponse["openCheckout"]
+}) {
+  const theme = useTheme()
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+
+  return (
+    <>
+      <Typography variant={"h1"}>Choose your plan</Typography>
+      <BillingPeriodButtons
+        billingCycle={billingCycle}
+        onMonthly={() => setBillingCycle("monthly")}
+        onYearly={() => setBillingCycle("yearly")}
+      />
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+        }}
+      >
+        <MuiPrice
+          title={"Starter"}
+          billingCycle={billingCycle}
+          priceMonthly={paddleState.prices["monthly-starter"]}
+          priceYearly={paddleState.prices["yearly-starter"]}
+          description={priceInfos["monthly-starter"].info}
+          buttonLabel={"Choose"}
+          buttonVariant={"contained"}
+          onButtonClick={() => {
+            if (billingCycle === "monthly") return openCheckout({priceType: "monthly-starter"})
+            return openCheckout({priceType: "yearly-starter"})
+          }}
+        />
+        <MuiPrice
+          title={"Advanced"}
+          billingCycle={billingCycle}
+          priceMonthly={paddleState.prices["monthly-advanced"]}
+          priceYearly={paddleState.prices["yearly-advanced"]}
+          description={priceInfos["monthly-advanced"].info}
+          buttonLabel={"Choose"}
+          buttonVariant={"contained"}
+          onButtonClick={() => {
+            if (billingCycle === "monthly") return openCheckout({priceType: "monthly-advanced"})
+            return openCheckout({priceType: "yearly-advanced"})
+          }}
+        />
+        <MuiPrice
+          title={"Pro"}
+          billingCycle={billingCycle}
+          priceMonthly={paddleState.prices["monthly-pro"]}
+          priceYearly={paddleState.prices["yearly-pro"]}
+          description={priceInfos["monthly-pro"].info}
+          buttonLabel={"Choose"}
+          buttonVariant={"contained"}
+          onButtonClick={() => {
+            if (billingCycle === "monthly") return openCheckout({priceType: "monthly-pro"})
+            return openCheckout({priceType: "yearly-pro"})
+          }}
+        />
+      </Box>
+      <Box className={"checkout-container"} />
+    </>
+  )
+}
+
+export function PaymentSiteContainer() {
   const {openCheckout, state} = usePaddle()
   const theme = useTheme()
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
@@ -116,6 +186,17 @@ export function PaddleModal() {
   useEffect(() => {
     // if (paddle) openCheckout()
   }, [state])
+
+  function renderContent() {
+    if (state.type === "loading") return <Typography variant={"h1"}>Choose your plan</Typography>
+    if (state.type === "error") return <Typography variant={"h1"}>Choose your plan</Typography>
+    return (
+      <PaymentSiteInner
+        paddleState={state}
+        openCheckout={openCheckout}
+      />
+    )
+  }
 
   return (
     <Box
@@ -144,6 +225,9 @@ export function PaddleModal() {
         >
           Make it bilingual works together with paddle to process payments worldwide.
         </Typography>
+        <Typography>
+          <Link color={theme.palette.primary.contrastText}>Read more</Link>
+        </Typography>
       </Box>
       <Box
         sx={{
@@ -152,47 +236,7 @@ export function PaddleModal() {
           mr: 8,
         }}
       >
-        {/*<HorizontalLinearStepper />*/}
-        {/*<Button onClick={getPrices}>Get Prices</Button>*/}
-        <Typography variant={"h1"}>Choose your plan</Typography>
-        <BillingPeriodButtons
-          state={billingCycle}
-          onMonthly={() => setBillingCycle("monthly")}
-          onYearly={() => setBillingCycle("yearly")}
-        />
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-          }}
-        >
-          <MuiPrice
-            title={"Starter"}
-            billingCycle={billingCycle}
-            price={"20"}
-            description={["A", "B"]}
-            buttonLabel={"Choose"}
-            buttonVariant={"outlined"}
-          />
-          <MuiPrice
-            title={"Advanced"}
-            billingCycle={billingCycle}
-            price={"20"}
-            description={["A", "B"]}
-            buttonLabel={"Choose"}
-            buttonVariant={"outlined"}
-          />
-          <MuiPrice
-            title={"Pro"}
-            billingCycle={billingCycle}
-            price={"20"}
-            description={["A", "B"]}
-            buttonLabel={"Choose"}
-            buttonVariant={"outlined"}
-          />
-        </Box>
-        <Box className={"checkout-container"} />
-        <Button onClick={openCheckout}>Open Checkout</Button>
+        {renderContent()}
       </Box>
     </Box>
   )

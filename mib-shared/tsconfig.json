@@ -13,6 +13,7 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es5",
+    "noEmit": true,
     "lib": [
       "es7",
       "dom"

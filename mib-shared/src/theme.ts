@@ -49,9 +49,6 @@ export const theme = createTheme({
   //   allVariants: {
   //     color: mibBlack,
   //   },
-  button: {
-    textTransform: "none",
-  },
   // },
   typography: {
     fontFamily: "Inter, sans-serif",

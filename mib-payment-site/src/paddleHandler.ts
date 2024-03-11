@@ -1,7 +1,7 @@
-import {Product} from "@shared/types"
 import {CheckoutOpenLineItem, initializePaddle} from "@paddle/paddle-js"
+import {PriceType} from "@shared/paddle/types"
 
-const priceIds: Record<Product, string> = {
+const priceIds: Record<PriceType, string> = {
   "monthly-starter": "pri_01hnne81drjc0jeanw6z2xbvsd",
   "monthly-advanced": "pri_01hnwtcnxnvqfd7w8hmrc2b7et",
   "monthly-pro": "",
@@ -10,14 +10,29 @@ const priceIds: Record<Product, string> = {
   "yearly-pro": "",
 }
 
+const prices: Prices = {
+  "monthly-starter": "20",
+  "monthly-advanced": "30",
+  "monthly-pro": "60",
+  "yearly-starter": "200",
+  "yearly-advanced": "300",
+  "yearly-pro": "600",
+}
+
+export type Prices = Record<PriceType, string>
+
 class PaddleHandler {
-  getPriceId(product: Product): string {
-    return priceIds[product]
+  getPriceId(priceType: PriceType): string {
+    return priceIds[priceType]
   }
 
   async fetchCustomerId(userId: string): Promise<string | undefined> {
     // todo fetch customerId from BE
     return new Promise(resolve => setTimeout(() => resolve(undefined), 0))
+  }
+
+  async fetchPrices(): Promise<Prices> {
+    return new Promise(resolve => setTimeout(() => resolve(prices), 50))
   }
 
   async initPaddle() {
@@ -29,8 +44,8 @@ class PaddleHandler {
     return paddleInstance
   }
 
-  getCheckoutParams(options: {customerId?: string; email: string; product: Product}) {
-    const {customerId, email, product} = options
+  getCheckoutParams(options: {customerId?: string; email: string; priceType: PriceType}) {
+    const {customerId, email, priceType} = options
     const getCustomerData = () => {
       if (customerId) {
         return {id: customerId}
@@ -38,7 +53,7 @@ class PaddleHandler {
       return {email: email}
     }
     const item: CheckoutOpenLineItem = {
-      priceId: this.getPriceId(product),
+      priceId: this.getPriceId(priceType),
     }
     return {
       items: [item],

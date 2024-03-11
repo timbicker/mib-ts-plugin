@@ -12,28 +12,54 @@ import React from "react"
 
 export function MuiPrice({
   title,
-  price,
+  priceMonthly,
+  priceYearly,
   billingCycle,
   description,
   buttonLabel,
   buttonVariant = "contained",
+  onButtonClick,
 }: {
   title: string
-  price: string
   billingCycle: "monthly" | "yearly"
+  priceMonthly: string
+  priceYearly: string
   description: string[]
   buttonLabel: string
   buttonVariant?: ButtonProps["variant"]
+  onButtonClick?: () => void
 }) {
   function billingCycleText() {
     if (billingCycle === "monthly") return "per month"
-    return "per year"
+    return "per month"
   }
+
+  function price() {
+    if (billingCycle === "monthly") return priceMonthly
+    return Math.floor(parseInt(priceYearly) / 12)
+  }
+
+  function savedAmount() {
+    if (billingCycle === "monthly") return null
+    const diff = parseInt(priceMonthly) * 12 - parseInt(priceYearly)
+    return (
+      <Typography sx={theme => ({color: theme.palette.success.main})}>
+        You save {`${diff}`}$ per year.
+      </Typography>
+    )
+  }
+
+  function billedYearly() {
+    if (billingCycle === "monthly") return <Typography sx={{fontSize: "0.85rem"}}>billed monthly</Typography>
+    return <Typography sx={{fontSize: "0.85rem"}}>billed yearly</Typography>
+  }
+
   return (
     <Grid
       sx={{
         flexGrow: 1,
-        maxWidth: 300,
+        width: 280,
+        maxWidth: 280,
       }}
       item
       key={title}
@@ -60,7 +86,7 @@ export function MuiPrice({
               display: "flex",
               // justifyContent: "center",
               alignItems: "baseline",
-              mb: 2,
+              // mb: 2,
             }}
           >
             <Typography
@@ -70,7 +96,7 @@ export function MuiPrice({
               }}
               color={theme => theme.palette.text.primary}
             >
-              ${price}
+              ${price()}
             </Typography>
             <Typography
               variant="h6"
@@ -79,7 +105,14 @@ export function MuiPrice({
               &nbsp;{billingCycleText()}
             </Typography>
           </Box>
-          <ul>
+          {/*{savedAmount()}*/}
+          {billedYearly()}
+          <Box
+            component={"ul"}
+            sx={{
+              pl: 2,
+            }}
+          >
             {description.map(line => (
               <Typography
                 component="li"
@@ -90,12 +123,13 @@ export function MuiPrice({
                 {line}
               </Typography>
             ))}
-          </ul>
+          </Box>
         </CardContent>
         <CardActions>
           <Button
             fullWidth
             variant={buttonVariant}
+            onClick={onButtonClick}
           >
             {buttonLabel}
           </Button>

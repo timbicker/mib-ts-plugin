@@ -4,6 +4,7 @@ import {theme} from "@shared/theme"
 import "@fontsource/inter/200.css"
 import "@fontsource/inter/400.css"
 import "@fontsource/inter/600.css"
+import "@shared/initFirebaseFrontend"
 
 export default function App({Component, pageProps}: AppProps) {
   return (
