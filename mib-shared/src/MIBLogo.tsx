@@ -7,8 +7,8 @@ import {SxProps} from "@mui/material"
 
 export function MIBLogo({sx, color = "standard"}: {sx?: SxProps; color?: "white" | "standard"}) {
   function logo() {
-    if (color === "white") return logoWhite.src
-    return logoGrey.src
+    if (color === "white") return logoWhite.src ?? logoWhite
+    return logoGrey.src ?? logoGrey
   }
   return (
     <Box

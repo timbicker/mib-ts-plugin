@@ -11,23 +11,11 @@ function translateParagraph(text: string): Promise<string> {
 }
 
 async function logIn(email: string, password: string): Promise<void> {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    const user = userCredential.user
-  } catch (error) {
-    const errorCode = error.code
-    const errorMessage = error.message
-  }
+  const userCredential = await signInWithEmailAndPassword(auth, email, password)
 }
 
 async function register(email: string, password: string): Promise<void> {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-    const user = userCredential.user
-  } catch (error) {
-    const errorCode = error.code
-    const errorMessage = error.message
-  }
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password)
 }
 
 export const api = {

@@ -95,15 +95,6 @@ export function LoginPageInner({
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                value="remember"
-                color="primary"
-              />
-            }
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth
@@ -136,7 +127,7 @@ export function LoginPageInner({
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{mt: 8, mb: 4}} />
+      {/*<Copyright sx={{mt: 8, mb: 4}} />*/}
     </Container>
   )
 }

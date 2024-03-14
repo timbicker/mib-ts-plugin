@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from "react"
+import {Divider, Typography, useTheme} from "@mui/material"
 import Box from "@mui/material/Box"
-import {PaddleState, usePaddle, UsePaddleResponse} from "@/usePaddle"
 import Button from "@mui/material/Button"
-import {Divider, Link, Typography, useTheme} from "@mui/material"
-import {MIBLogo} from "@shared/MIBLogo"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Checkbox from "@mui/material/Checkbox"
+import React, {useState} from "react"
+import {usePaddleLoaded} from "@/state/usePaddle"
 import {MuiPrice} from "@shared/MuiPrice"
 import {priceInfos} from "@shared/paddle/types"
+import {PageContainer} from "@/components/PageContainer"
 
 function BillingPeriodButtons({
   onMonthly,
@@ -19,6 +19,7 @@ function BillingPeriodButtons({
   billingCycle: "monthly" | "yearly"
 }) {
   const theme = useTheme()
+
   function buttonStyles(active: boolean) {
     if (active)
       return {
@@ -46,6 +47,7 @@ function BillingPeriodButtons({
     }
     onYearly()
   }
+
   return (
     <Box
       sx={{
@@ -53,7 +55,6 @@ function BillingPeriodButtons({
         my: 4,
         pl: 1,
         py: 2,
-        // gap: 2,
         alignItems: "center",
       }}
     >
@@ -109,15 +110,9 @@ function BillingPeriodButtons({
   )
 }
 
-function PaymentSiteInner({
-  paddleState,
-  openCheckout,
-}: {
-  paddleState: Extract<PaddleState, {type: "loaded"}>
-  openCheckout: UsePaddleResponse["openCheckout"]
-}) {
-  const theme = useTheme()
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+function NewPlanPageInner() {
+  const {state, openCheckout} = usePaddleLoaded()
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly")
 
   return (
     <>
@@ -136,8 +131,8 @@ function PaymentSiteInner({
         <MuiPrice
           title={"Starter"}
           billingCycle={billingCycle}
-          priceMonthly={paddleState.prices["monthly-starter"]}
-          priceYearly={paddleState.prices["yearly-starter"]}
+          priceMonthly={state.prices["monthly-starter"]}
+          priceYearly={state.prices["yearly-starter"]}
           description={priceInfos["monthly-starter"].info}
           buttonLabel={"Choose"}
           buttonVariant={"contained"}
@@ -149,8 +144,8 @@ function PaymentSiteInner({
         <MuiPrice
           title={"Advanced"}
           billingCycle={billingCycle}
-          priceMonthly={paddleState.prices["monthly-advanced"]}
-          priceYearly={paddleState.prices["yearly-advanced"]}
+          priceMonthly={state.prices["monthly-advanced"]}
+          priceYearly={state.prices["yearly-advanced"]}
           description={priceInfos["monthly-advanced"].info}
           buttonLabel={"Choose"}
           buttonVariant={"contained"}
@@ -162,8 +157,8 @@ function PaymentSiteInner({
         <MuiPrice
           title={"Pro"}
           billingCycle={billingCycle}
-          priceMonthly={paddleState.prices["monthly-pro"]}
-          priceYearly={paddleState.prices["yearly-pro"]}
+          priceMonthly={state.prices["monthly-pro"]}
+          priceYearly={state.prices["yearly-pro"]}
           description={priceInfos["monthly-pro"].info}
           buttonLabel={"Choose"}
           buttonVariant={"contained"}
@@ -178,66 +173,10 @@ function PaymentSiteInner({
   )
 }
 
-export function PaymentSiteContainer() {
-  const {openCheckout, state} = usePaddle()
-  const theme = useTheme()
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
-
-  useEffect(() => {
-    // if (paddle) openCheckout()
-  }, [state])
-
-  function renderContent() {
-    if (state.type === "loading") return <Typography variant={"h1"}>Choose your plan</Typography>
-    if (state.type === "error") return <Typography variant={"h1"}>Choose your plan</Typography>
-    return (
-      <PaymentSiteInner
-        paddleState={state}
-        openCheckout={openCheckout}
-      />
-    )
-  }
-
+export function NewPlanPage() {
   return (
-    <Box
-      sx={{
-        display: "grid",
-        height: "100vh",
-        gridTemplateColumns: "min(33vw, 500px) 1fr",
-      }}
-    >
-      <Box
-        sx={{
-          backgroundColor: theme.palette.primary.dark,
-          p: 4,
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
-      >
-        <MIBLogo color={"white"} />
-        <Typography
-          sx={{
-            mt: 4,
-            width: 300,
-          }}
-          color={theme.palette.primary.contrastText}
-        >
-          Make it bilingual works together with paddle to process payments worldwide.
-        </Typography>
-        <Typography>
-          <Link color={theme.palette.primary.contrastText}>Read more</Link>
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          mt: 24,
-          ml: 8,
-          mr: 8,
-        }}
-      >
-        {renderContent()}
-      </Box>
-    </Box>
+    <PageContainer>
+      <NewPlanPageInner />
+    </PageContainer>
   )
 }

@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "mib": "yarn workspace mib-word-plugin",
-    "mib:payment": "yarn workspace mib-payment-site"
+    "mib:payment": "yarn workspace mib-payment-site",
+    "emulator": "firebase emulators:start"
   },
   "engines": {
     "node": "18"

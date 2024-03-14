@@ -1,7 +1,6 @@
 import {useAppState} from "../state/state"
 import React, {ReactNode} from "react"
 import Box from "@mui/material/Box"
-import {MIBLogo} from "@shared/MIBLogo"
 import TranslateIcon from "@mui/icons-material/Translate"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -9,12 +8,13 @@ import {Divider} from "@mui/material"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
 import {Page} from "../state/usePage"
+import {MIBLogo} from "@shared/MIBLogo"
 
 export function TopBarWithoutTabs({children}: {children?: ReactNode}) {
   return (
     <Box sx={{position: "sticky", top: 0, zIndex: 10000, backgroundColor: "#f7f7f7"}}>
       <Box py={2}>
-        <MIBLogo />
+        <MIBLogo color={"standard"} />
       </Box>
       {children}
       <Divider />
@@ -24,17 +24,17 @@ export function TopBarWithoutTabs({children}: {children?: ReactNode}) {
 
 export function TopBar({page, setPage}: {page: Page; setPage: (page: Page) => void}) {
   function pageToIndex() {
-    const mapping = {
+    const mapping: Record<string, number> = {
       new: 0,
       update: 1,
       settings: 2,
     }
 
-    const startingPath = page.split("/")[0] as any
+    const startingPath = page.split("/")[0]
     return mapping[startingPath]
   }
 
-  const indexToPage = {
+  const indexToPage: Record<number, Page> = {
     0: "new",
     1: "update",
     2: "settings",

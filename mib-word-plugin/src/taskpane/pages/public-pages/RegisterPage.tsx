@@ -199,7 +199,7 @@ export function RegisterPageInner({
             value={state.password1}
             onChange={handleChange}
             helperText={getPasswordHelperText()}
-            error={error.passwordMatch || error.passwordStrength}
+            error={!!error.passwordMatch || !!error.passwordStrength}
           />
           <PasswordInput
             id={"password2"}
@@ -208,7 +208,7 @@ export function RegisterPageInner({
             value={state.password2}
             onChange={handleChange}
             helperText={getPasswordHelperText()}
-            error={error.passwordMatch || error.passwordStrength}
+            error={!!error.passwordMatch || !!error.passwordStrength}
           />
           <Button
             fullWidth

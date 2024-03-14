@@ -1,7 +1,6 @@
-import React from "react"
 import type {Meta, StoryObj} from "@storybook/react"
 import {Decorators, decorators} from "../decorators"
-import {ChoosePlanPage, MyPlanPage} from "../../taskpane/pages/settings-pages/MyPlan"
+import {MyPlanPage} from "../../taskpane/pages/settings-pages/MyPlan"
 import {Primary} from "../components/TokenStatus.stories"
 import {TokenStatusProps} from "../../taskpane/components/TokenStatus"
 import {AboutPage} from "../../taskpane/pages/settings-pages/About"
@@ -44,7 +43,7 @@ export const ChoosePlan: Story = {
   args: {
     page: "settings/choose-plan",
   },
-  render: ChoosePlanPage,
+  render: MyPlanPage,
 }
 
 export const MyPlan: Story = {
@@ -63,14 +62,14 @@ export const About: Story = {
   render: AboutPage,
 }
 
-export const TokenStatus: Story = {
-  name: "Token Status",
-  args: {
-    page: "settings/token-status",
-    tokenStatusProps: Primary.args as TokenStatusProps,
-  },
-  render: TokenStatusPage,
-}
+// export const TokenStatus: Story = {
+//   name: "Token Status",
+//   args: {
+//     page: "settings/token-status",
+//     tokenStatusProps: Primary.args as TokenStatusProps,
+//   },
+//   render: TokenStatusPage,
+// }
 
 export const ContactUs: Story = {
   name: "Contact Us",

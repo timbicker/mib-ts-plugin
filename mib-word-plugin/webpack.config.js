@@ -34,6 +34,7 @@ module.exports = async (env, options) => {
       extensions: [".ts", ".tsx", ".html", ".js"],
       alias: {
         "@assets": path.resolve(__dirname, "assets"),
+        "@shared": path.resolve(__dirname, "../mib-shared/src"),
       },
     },
     module: {

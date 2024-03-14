@@ -13,7 +13,7 @@ export function LanguageSelect() {
       value={language}
       options={countries}
       onChange={(_, newValue) => {
-        setLanguage(newValue)
+        setLanguage(newValue === null ? undefined : newValue)
       }}
       id="country-select-demo"
       sx={{m: 1, width: "100%", maxWidth: 400}}

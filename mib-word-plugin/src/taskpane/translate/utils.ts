@@ -81,7 +81,8 @@ export class ListManager {
       if (!originalParagraph.listItemOrNullObject.isNullObject) {
         level = originalParagraph.listItemOrNullObject.level
       }
-      newParagraph.attachToList(newList.id, level)
+      // todo fix undefined
+      newParagraph.attachToList(newList!.id, level)
     }
   }
 }

@@ -8,7 +8,7 @@ export function LoginPage() {
     <DummyWordSceleton>
       <LoginPageInner
         setAuthPage={() => null}
-        login={() => null}
+        login={() => new Promise(resolve => resolve())}
       />
     </DummyWordSceleton>
   )

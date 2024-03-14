@@ -1,4 +1,4 @@
-import {CheckoutOpenLineItem, initializePaddle} from "@paddle/paddle-js"
+import {CheckoutOpenLineItem, initializePaddle, PaddleEventData} from "@paddle/paddle-js"
 import {PriceType} from "@shared/paddle/types"
 
 const priceIds: Record<PriceType, string> = {
@@ -35,10 +35,11 @@ class PaddleHandler {
     return new Promise(resolve => setTimeout(() => resolve(prices), 50))
   }
 
-  async initPaddle() {
+  async initPaddle(eventCallback: (event: PaddleEventData) => void) {
     const paddleInstance = await initializePaddle({
       environment: "sandbox",
       token: "test_858a3c8a8b4b8660be3ae035e2a",
+      eventCallback: eventCallback,
     })
     if (!paddleInstance) throw new Error("Failed to initialize Paddle")
     return paddleInstance

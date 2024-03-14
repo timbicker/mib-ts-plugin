@@ -1,5 +1,5 @@
 import {NewPlanPage} from "@/components/NewPlanPage"
 
-export default function Home() {
+export default function ChangeSub() {
   return <NewPlanPage />
 }

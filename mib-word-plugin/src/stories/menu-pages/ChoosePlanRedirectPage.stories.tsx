@@ -12,7 +12,6 @@ const meta = {
   },
   args: {
     page: "new",
-    onClick: () => {},
   },
   decorators: [decorators.menuPage],
 } satisfies Meta<typeof ChoosePlanRedirectPage> & {args: {page: Page}}

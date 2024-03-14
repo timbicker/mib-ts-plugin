@@ -8,6 +8,7 @@ import {Page} from "../../state/usePage"
 import {useAuth} from "../../state/auth"
 
 export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => void; activePlan?: boolean}) {
+  const {logOut} = useAuth()
   function renderMisc() {
     return (
       <>
@@ -34,7 +35,7 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
         </Button>
         <Button
           variant={"outlined"}
-          onClick={() => setPage("settings/about")}
+          onClick={logOut}
           fullWidth
         >
           Log out
