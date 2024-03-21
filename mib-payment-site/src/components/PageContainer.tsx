@@ -2,7 +2,7 @@ import React, {PropsWithChildren} from "react"
 import Box from "@mui/material/Box"
 import {PaddleProvider, usePaddleProvider} from "@/state/usePaddle"
 import {Link, Typography, useTheme} from "@mui/material"
-import {MIBLogo} from "@shared/MIBLogo"
+import {MIBLogo} from "@shared/components/MIBLogo"
 
 export function PageContainer({children}: PropsWithChildren<{}>) {
   const paddleState = usePaddleProvider()
@@ -18,6 +18,12 @@ export function PageContainer({children}: PropsWithChildren<{}>) {
         <Typography>
           Your token became invalid. Click on the book a plan button in the Word plugin to receive a new
           token.
+        </Typography>
+      )
+    if (state.type === "no-token")
+      return (
+        <Typography>
+          No token provided. Click on the book a plan button in the Word plugin to receive a token.
         </Typography>
       )
     if (state.type === "thank-you")

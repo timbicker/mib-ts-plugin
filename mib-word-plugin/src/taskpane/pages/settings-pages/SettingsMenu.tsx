@@ -6,6 +6,7 @@ import {Divider} from "@mui/material"
 import React from "react"
 import {Page} from "../../state/usePage"
 import {useAuth} from "../../state/auth"
+import {RedirectPaymentButton} from "../../components/RedirectPaymentButton"
 
 export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => void; activePlan?: boolean}) {
   const {logOut} = useAuth()
@@ -49,6 +50,7 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
       <Stack
         flexDirection={"column"}
         alignItems={"center"}
+        sx={{pt: 4}}
       >
         <Box
           sx={{
@@ -58,14 +60,7 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
             gap: 2,
           }}
         >
-          <Button
-            variant={"contained"}
-            fullWidth
-            sx={{mt: 2}}
-            onClick={() => setPage("settings/choose-plan")}
-          >
-            Book a plan
-          </Button>
+          <RedirectPaymentButton label={"Book a plan"} />
           <Divider sx={{mt: 4, mb: 2}} />
           {renderMisc()}
         </Box>
@@ -80,6 +75,7 @@ export function SettingsMenu({setPage, activePlan}: {setPage: (page: Page) => vo
         flexDirection={"column"}
         width={200}
         spacing={2}
+        sx={{pt: 2}}
       >
         <Button
           variant={"outlined"}

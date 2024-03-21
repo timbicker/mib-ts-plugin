@@ -1,7 +1,7 @@
 import React from "react"
 import Progress from "./components/Progress"
 import {ThemeProvider} from "@emotion/react"
-import Logo from "@shared/logo-images/logo-filled.png"
+import Logo from "@shared/components/logo-images/logo-filled.png"
 import {AppStateProvider, useAppState, useAppStateProvider} from "./state/state"
 import {NewTranslationPageLoader} from "./pages/menu-pages/NewTranslationPage"
 import {UpdateTranslationPageLoader} from "./pages/menu-pages/UpdatePage"
@@ -18,6 +18,7 @@ import {ContactPage} from "@mui/icons-material"
 import {TokenStatusPageLoader} from "./pages/settings-pages/TokenStatusPage"
 import {SettingsPage} from "./state/usePage"
 import {SettingsMenuLoader} from "./pages/settings-pages/SettingsMenu"
+import {LoadingPage} from "./pages/public-pages/LoadingPage"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* global Word, require */
@@ -54,14 +55,7 @@ type AuthPages = "login" | "register" | "forgot-password"
 
 function AuthRouter() {
   const {auth} = useAuth()
-  if (auth.type === "loading")
-    return (
-      <Progress
-        title="Loading"
-        message="Loading"
-        logo={Logo}
-      />
-    )
+  if (auth.type === "loading" || auth.type === "init") return <LoadingPage />
   if (auth.type === "unauthenticated") return <PublicApp />
   return <PrivateApp />
 }

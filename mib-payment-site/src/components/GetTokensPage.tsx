@@ -114,6 +114,12 @@ function NewPlanPageInner() {
   const {state, openCheckout} = usePaddleLoaded()
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly")
 
+  // todo
+  /*
+   * - enter amount of tokens to buy
+   * - show upgrade plan link if the plan is not the highest plan
+   */
+
   return (
     <>
       <Typography variant={"h1"}>Choose your plan</Typography>
@@ -173,7 +179,7 @@ function NewPlanPageInner() {
   )
 }
 
-export function NewPlanPage() {
+export function GetTokensPage() {
   return (
     <PageContainer>
       <NewPlanPageInner />

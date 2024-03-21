@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Container from "@mui/material/Container"
-import {MIBLogo} from "@shared/MIBLogo"
+import {MIBLogo} from "@shared/components/MIBLogo"
 import {useAuth} from "../../state/auth"
 
 function Copyright(props: any) {

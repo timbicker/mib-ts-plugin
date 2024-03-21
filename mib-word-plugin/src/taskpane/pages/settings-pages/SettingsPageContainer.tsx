@@ -64,7 +64,7 @@ function SettingsBreadCrumbs({
   return (
     <Box
       role="presentation"
-      sx={{mb: 3}}
+      sx={{mb: 1}}
     >
       <Breadcrumbs>{renderBreadCrumbs()}</Breadcrumbs>
     </Box>

@@ -2,13 +2,16 @@
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
     "baseUrl": "./",
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "paths": {
+      "@shared/*": ["../mib-shared/src/*"]
+    }
   },
   "compileOnSave": false,
   "include": [

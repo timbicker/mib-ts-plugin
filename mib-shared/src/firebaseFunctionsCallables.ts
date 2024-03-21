@@ -1,4 +1,4 @@
-import {UserDoc} from "./databaseTypes"
+import {UserDoc} from "./firestore/userDoc"
 import {functionsNgrok} from "./initFirebaseFrontend"
 
 // https://firebase.google.com/docs/functions/callable-reference
@@ -97,6 +97,10 @@ class FirebaseApi {
 
   async decodeAuth(data: {encoding: string}): Promise<{userId: string; customerId: string; fail?: true}> {
     return await this.fetch<{userId: string; customerId: string}>("decodeAuth", data)
+  }
+
+  async handleTransaction(data: {userId: string; transactionId: string}) {
+    return await this.fetch<{userId: string; transactionId: string}>("handleTransaction", data)
   }
 
   async initCustomerId(

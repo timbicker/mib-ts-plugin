@@ -1,38 +1,12 @@
-import {CheckoutOpenLineItem, initializePaddle, PaddleEventData} from "@paddle/paddle-js"
-import {PriceType} from "@shared/paddle/types"
-
-const priceIds: Record<PriceType, string> = {
-  "monthly-starter": "pri_01hnne81drjc0jeanw6z2xbvsd",
-  "monthly-advanced": "pri_01hnwtcnxnvqfd7w8hmrc2b7et",
-  "monthly-pro": "",
-  "yearly-starter": "pri_01hnne8qp5a1nj0nptsgx6d1g2",
-  "yearly-advanced": "pri_01hnwtdj8af0x13mtmf0mq3cze",
-  "yearly-pro": "",
-}
-
-const prices: Prices = {
-  "monthly-starter": "20",
-  "monthly-advanced": "30",
-  "monthly-pro": "60",
-  "yearly-starter": "200",
-  "yearly-advanced": "300",
-  "yearly-pro": "600",
-}
-
-export type Prices = Record<PriceType, string>
+import {initializePaddle, Paddle, PaddleEventData} from "@paddle/paddle-js"
+import {BillingCycle, SubscriptionInfoStore, TierType} from "@/state/paddleSubscriptionStore"
 
 class PaddleHandler {
-  getPriceId(priceType: PriceType): string {
-    return priceIds[priceType]
-  }
+  private paddle: Paddle | undefined
+  private subscriptionInfoStore: SubscriptionInfoStore
 
-  async fetchCustomerId(userId: string): Promise<string | undefined> {
-    // todo fetch customerId from BE
-    return new Promise(resolve => setTimeout(() => resolve(undefined), 0))
-  }
-
-  async fetchPrices(): Promise<Prices> {
-    return new Promise(resolve => setTimeout(() => resolve(prices), 50))
+  constructor() {
+    this.subscriptionInfoStore = new SubscriptionInfoStore()
   }
 
   async initPaddle(eventCallback: (event: PaddleEventData) => void) {
@@ -42,27 +16,34 @@ class PaddleHandler {
       eventCallback: eventCallback,
     })
     if (!paddleInstance) throw new Error("Failed to initialize Paddle")
+    this.paddle = paddleInstance
     return paddleInstance
   }
 
-  getCheckoutParams(options: {customerId?: string; email: string; priceType: PriceType}) {
-    const {customerId, email, priceType} = options
-    const getCustomerData = () => {
-      if (customerId) {
-        return {id: customerId}
-      }
-      return {email: email}
-    }
-    const item: CheckoutOpenLineItem = {
-      priceId: this.getPriceId(priceType),
-    }
-    return {
-      items: [item],
+  getSubscriptionInfo(tier: TierType, billingCycle: BillingCycle) {
+    return this.subscriptionInfoStore.get(tier, billingCycle)
+  }
+
+  getTokenInfo(tier: TierType) {
+    return this.getSubscriptionInfo(tier, "monthly").token
+  }
+
+  openCheckout(options: {customerId: string; priceId: string; amount: number}) {
+    if (!this.paddle) throw new Error("Paddle not initialized")
+    const {customerId, priceId, amount} = options
+    this.paddle.Checkout.open({
+      items: [
+        {
+          priceId,
+        },
+      ],
       settings: {
         allowLogout: false,
       },
-      customer: getCustomerData(),
-    }
+      customer: {
+        id: customerId,
+      },
+    })
   }
 }
 

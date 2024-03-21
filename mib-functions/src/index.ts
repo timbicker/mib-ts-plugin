@@ -1,14 +1,17 @@
 import {onCall} from "firebase-functions/v2/https"
-import {UserDoc, UserDocHandler} from "../../mib-shared/src/databaseTypes"
 import {createEncryptedToken, decryptToken} from "./encryption"
-
 import {initializeApp} from "firebase-admin/app"
 import {getFirestore} from "firebase-admin/firestore"
 import {paddleApi} from "./paddleApi"
+import {UserDocHandler} from "./userDoc"
+import {type UserDoc} from "@shared/firestore/userDoc"
 
 initializeApp()
 
 const firestore = getFirestore()
+firestore.settings({
+  ignoreUndefinedProperties: true,
+})
 
 const userDocHandler = new UserDocHandler(firestore)
 
@@ -30,6 +33,7 @@ export const decodeAuth = onCall<{encoding: string}, {userId: string; customerId
   },
 )
 
+// todo rename to initUser
 export const initCustomerId = onCall<{email: string; userId: string}, Promise<{doc: UserDoc}>>(
   {region: "europe-west"},
   async req => {
@@ -37,9 +41,11 @@ export const initCustomerId = onCall<{email: string; userId: string}, Promise<{d
 
     let userDoc: UserDoc = {
       customerId: "",
-      subscriptionId: "",
-      tokenSets: [],
-      translations: [],
+      availableTokenCharacters: 0,
+      monthCycle: {
+        endsAt: new Date(),
+        translatedCharacters: 0,
+      },
     }
 
     const userDocResult = await userDocHandler.get(userId)
@@ -54,11 +60,45 @@ export const initCustomerId = onCall<{email: string; userId: string}, Promise<{d
   },
 )
 
+/*
+ * This only happens when the user buys tokens or makes a subscription when he didn't have one
+ */
+export const handleTransaction = onCall<{userId: string; transactionId: string}>(
+  {region: "europe-west"},
+  async req => {
+    const {userId, transactionId} = req.data
+    const info = await paddleApi.getTransactionInfo({transactionId})
+    // todo check that everything works as expected (subscription change & token add)
+    if (info.type === "subscription") {
+      await userDocHandler.update(userId, {
+        subscription: {
+          id: info.id,
+          expiresAt: info.expiresAt,
+          numCharacters: info.numCharacters,
+          startsAt: info.startsAt,
+        },
+      })
+    } else {
+      await userDocHandler.addTokens(userId, {numCharacters: info.numCharacters})
+    }
+  },
+)
+
 export const changeSubscription = onCall<{userId: string; subscriptionId: string}>(
   {region: "europe-west"},
   async req => {
     const {userId, subscriptionId} = req.data
-    await userDocHandler.update(userId, {subscriptionId})
+    const subscriptionInfo = await paddleApi.getSubscriptionInfo(subscriptionId)
+    await userDocHandler.update(userId, {subscription: subscriptionInfo})
+  },
+)
+
+export const cancelSubscription = onCall<{userId: string; subscriptionId: string}>(
+  {region: "europe-west"},
+  async req => {
+    const {userId, subscriptionId} = req.data
+    const subscriptionInfo = await paddleApi.cancelSubscription({subscriptionId})
+    await userDocHandler.update(userId, {subscription: subscriptionInfo})
   },
 )
 

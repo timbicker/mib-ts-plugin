@@ -8,11 +8,11 @@ import {Divider} from "@mui/material"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
 import {Page} from "../state/usePage"
-import {MIBLogo} from "@shared/MIBLogo"
+import {MIBLogo} from "@shared/components/MIBLogo"
 
 export function TopBarWithoutTabs({children}: {children?: ReactNode}) {
   return (
-    <Box sx={{position: "sticky", top: 0, zIndex: 10000, backgroundColor: "#f7f7f7"}}>
+    <Box sx={{position: "sticky", top: 0, zIndex: 1000, backgroundColor: "#f7f7f7"}}>
       <Box py={2}>
         <MIBLogo color={"standard"} />
       </Box>

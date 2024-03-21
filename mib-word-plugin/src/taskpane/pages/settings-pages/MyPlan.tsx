@@ -2,7 +2,7 @@ import React from "react"
 import {Divider} from "@mui/material"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
-import {MuiPrice} from "@shared/MuiPrice"
+import {MuiPrice} from "@shared/components/MuiPrice"
 
 export function MyPlanPage() {
   return (

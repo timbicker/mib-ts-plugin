@@ -5,6 +5,7 @@ import Alert from "@mui/material/Alert"
 import BarChartIcon from "@mui/icons-material/BarChart"
 import AlertTitle from "@mui/material/AlertTitle"
 import React from "react"
+import {RedirectPaymentButton} from "./RedirectPaymentButton"
 
 export type TokenStatusProps = {
   variant: "warning" | "okay"
@@ -82,7 +83,13 @@ export function TokenStatus({variant, translatedCharacters, charactersLeft}: Tok
           <AlertTitle>{charactersLeftText()}</AlertTitle>
           This is a approximates to {calculateNumberOfPages(charactersLeft)} pages.
         </Alert>
-        <Button variant={variant === "warning" ? "contained" : "outlined"}>Get more characters</Button>
+        <RedirectPaymentButton
+          path={"get-tokens"}
+          label={"Get tokens"}
+          variant={variant === "warning" ? "contained" : "outlined"}
+        >
+          Get more characters
+        </RedirectPaymentButton>
         <Box sx={{display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", columnGap: 2}}>
           <Divider />
           <Typography>OR</Typography>

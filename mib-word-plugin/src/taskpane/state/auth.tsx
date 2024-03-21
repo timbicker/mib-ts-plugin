@@ -2,7 +2,7 @@ import React, {PropsWithChildren, useEffect, useMemo} from "react"
 import {useState} from "react"
 import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 import {api} from "./api"
-import {UserDoc} from "@shared/databaseTypes"
+import {UserDoc} from "@shared/firestore/userDoc"
 import {firebaseFunctions} from "@shared/firebaseFunctionsCallables"
 import {doc, onSnapshot} from "firebase/firestore"
 import {db} from "@shared/initFirebaseFrontend"
@@ -10,13 +10,10 @@ import {db} from "@shared/initFirebaseFrontend"
 const firebaseAuth = getAuth()
 
 type AuthState =
+  | {type: "init"; user?: never}
   | {type: "loading"; user?: User}
   | {type: "unauthenticated"; user?: never}
   | {type: "authenticated"; user: User; userDoc: UserDoc}
-
-async function fakeLogin(): Promise<void> {
-  return new Promise(resolve => setTimeout(() => resolve(), 200))
-}
 
 function subscribeToUserDoc(userId: string, cb: (userDoc: UserDoc | undefined) => void) {
   return onSnapshot(doc(db, "users", userId), doc => {
@@ -24,9 +21,19 @@ function subscribeToUserDoc(userId: string, cb: (userDoc: UserDoc | undefined) =
   })
 }
 
+function isSubscriptionValid(subscription: UserDoc["subscription"]) {
+  if (!subscription) return false
+  // todo use real dates here
+  // if (subscription.expiresAt) return false
+  return true
+}
+
 function useAuthProvider() {
-  const [auth, setAuth] = useState<AuthState>({type: "unauthenticated"})
-  const plan: boolean = useMemo(() => auth.type === "authenticated" && !!auth.userDoc.subscriptionId, [auth])
+  const [auth, setAuth] = useState<AuthState>({type: "init"})
+  const plan: boolean = useMemo(
+    () => auth.type === "authenticated" && isSubscriptionValid(auth.userDoc.subscription),
+    [auth],
+  )
 
   useEffect(() => {
     const user = auth.user
@@ -44,6 +51,7 @@ function useAuthProvider() {
       if (user) {
         const userIdToken = await user.getIdToken()
         await firebaseFunctions.initCustomerId({userId: user.uid, email: user.email!}, {userIdToken})
+        // todo subscribe here to db?
         setAuth({type: "loading", user: user})
       } else {
         // User is signed out
